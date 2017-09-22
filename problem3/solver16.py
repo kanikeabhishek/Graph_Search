@@ -53,30 +53,56 @@ class puzzle_15:
 
         elif direction == 'R':
             if size == 1:
-                puzzle_temp[zero[0]][0] = puzzle_temp[zero[0]][1]
-                puzzle_temp[zero[0]][1] = 0
+                puzzle_temp[self.zero[0]][self.zero[1]] = puzzle_temp[self.zero[0]][self.zero[1]+1]
+                puzzle_temp[self.zero[0]][self.zero[1]+1] = 0
+                self.zero = [self.zero[0],self.zero[1]+1]
             elif size == 2:
-                puzzle_temp[zero[0]][0] = puzzle_temp[zero[0]][1]
-                puzzle_temp[zero[0]][1] = puzzle_temp[zero[0]][2]
-                puzzle_temp[zero[0]][2] = 0
+                puzzle_temp[self.zero[0]][self.zero[1]] = puzzle_temp[self.zero[0]][self.zero[1]+1]
+                puzzle_temp[self.zero[0]][self.zero[1]+1] = puzzle_temp[self.zero[0]][self.zero[1]+2]
+                puzzle_temp[self.zero[0]][self.zero[1]+2] = 0
+                self.zero = [self.zero[0], self.zero[1] + 2]
+
             elif size == 3:
-                puzzle_temp[zero[0]][0] = puzzle_temp[zero[0]][1]
-                puzzle_temp[zero[0]][1] = puzzle_temp[zero[0]][2]
-                puzzle_temp[zero[0]][2] = puzzle_temp[zero[0]][3]
-                puzzle_temp[zero[0]][3] = 0
+                puzzle_temp[self.zero[0]][self.zero[1]] = puzzle_temp[self.zero[0]][self.zero[1]+1]
+                puzzle_temp[self.zero[0]][self.zero[1]+1] = puzzle_temp[self.zero[0]][self.zero[1]+2]
+                puzzle_temp[self.zero[0]][self.zero[1]+2] = puzzle_temp[self.zero[0]][self.zero[1]+3]
+                puzzle_temp[self.zero[0]][self.zero[1]+3] = 0
+                self.zero = [self.zero[0], self.zero[1] + 3]
         elif direction == 'U':
-            temp = tempArr[0][i]
-            tempArr[0][i] = tempArr[1][i]
-            tempArr[1][i] = tempArr[2][i]
-            tempArr[2][i] = tempArr[3][i]
-            tempArr[3][i] = temp
+            if size == 1:
+                puzzle_temp[self.zero[0]][self.zero[1]] = puzzle_temp[self.zero[0]][self.zero[1]+1]
+                puzzle_temp[self.zero[0]][self.zero[1]+1] = 0
+                self.zero = [self.zero[0],self.zero[1]+1]
+            elif size == 2:
+                puzzle_temp[self.zero[0]][self.zero[1]] = puzzle_temp[self.zero[0]][self.zero[1]+1]
+                puzzle_temp[self.zero[0]][self.zero[1]+1] = puzzle_temp[self.zero[0]][self.zero[1]+2]
+                puzzle_temp[self.zero[0]][self.zero[1]+2] = 0
+                self.zero = [self.zero[0], self.zero[1] + 2]
+
+            elif size == 3:
+                puzzle_temp[self.zero[0]][self.zero[1]] = puzzle_temp[self.zero[0]][self.zero[1]+1]
+                puzzle_temp[self.zero[0]][self.zero[1]+1] = puzzle_temp[self.zero[0]][self.zero[1]+2]
+                puzzle_temp[self.zero[0]][self.zero[1]+2] = puzzle_temp[self.zero[0]][self.zero[1]+3]
+                puzzle_temp[self.zero[0]][self.zero[1]+3] = 0
+                self.zero = [self.zero[0], self.zero[1] + 3]
         elif direction == 'D':
-            temp = tempArr[3][i]
-            tempArr[3][i] = tempArr[2][i]
-            tempArr[2][i] = tempArr[1][i]
-            tempArr[1][i] = tempArr[0][i]
-            tempArr[0][i] = temp
-        return tempArr
+            if size == 1:
+                puzzle_temp[self.zero[0]][self.zero[1]] = puzzle_temp[self.zero[0]][self.zero[1]+1]
+                puzzle_temp[self.zero[0]][self.zero[1]+1] = 0
+                self.zero = [self.zero[0],self.zero[1]+1]
+            elif size == 2:
+                puzzle_temp[self.zero[0]][self.zero[1]] = puzzle_temp[self.zero[0]][self.zero[1]+1]
+                puzzle_temp[self.zero[0]][self.zero[1]+1] = puzzle_temp[self.zero[0]][self.zero[1]+2]
+                puzzle_temp[self.zero[0]][self.zero[1]+2] = 0
+                self.zero = [self.zero[0], self.zero[1] + 2]
+
+            elif size == 3:
+                puzzle_temp[self.zero[0]][self.zero[1]] = puzzle_temp[self.zero[0]][self.zero[1]+1]
+                puzzle_temp[self.zero[0]][self.zero[1]+1] = puzzle_temp[self.zero[0]][self.zero[1]+2]
+                puzzle_temp[self.zero[0]][self.zero[1]+2] = puzzle_temp[self.zero[0]][self.zero[1]+3]
+                puzzle_temp[self.zero[0]][self.zero[1]+3] = 0
+                self.zero = [self.zero[0], self.zero[1] + 3]
+        return puzzle_temp
 
 
     def read_puzzle(file_directory):
