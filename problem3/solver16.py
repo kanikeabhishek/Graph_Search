@@ -176,15 +176,17 @@ def successors(puzzle):
 
 # BFS
 def solve(puzzle):
+    dict={}
     g = 0
     h = heuristic(puzzle)
     fringe = PriorityQueue()
     fringe.put((h+g, g,puzzle))
     while not fringe.empty():
         f, g_old, state = fringe.get()
+        dict[g]=state
+        # print dict
         if is_goal(state):
-            print state
-            return True
+            return dict
         for s in successors(state):
             h = heuristic(s)
             g = g_old+1
@@ -193,7 +195,29 @@ def solve(puzzle):
     return False
 
 
+def get_path(dict):
+    path=[]
+    for i in range(1,len(dict)):
+        row = find_empty(dict[i])[0]
+        col = find_empty(dict[i])[1]
+        direction_vertical = row - find_empty(dict[i-1])[0]
+        direction_horizontal = col - find_empty(dict[i-1])[1]
+        #print direction_vertical,direction_horizontal
+        if direction_vertical > 0:
+            move = 'U' + str(abs(direction_vertical)) + str(col+1)
+            path.append(move)
+        elif direction_vertical < 0:
+            move = 'D' + str(abs(direction_vertical)) + str(col+1)
+            path.append(move)
+        elif direction_horizontal > 0:
+            move = 'L' + str(abs(direction_horizontal)) + str(row+1)
+            path.append(move)
+        elif direction_horizontal < 0:
+            move = 'R' + str(abs(direction_horizontal)) + str(row+1)
+            path.append(move)
+        #print path
 
+    return ' '.join(path)
 # def main():
 #     a = [[1, 2, 3, 4], [5, 6, 7, 8], [9, 0, 10, 12], [13, 14, 15, 11]]
 #
@@ -218,7 +242,13 @@ initial_puzzle = read_puzzle(file_directory)
 goal_state = [[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12], [13, 14, 15, 0]]
 
 a = copy.deepcopy(initial_puzzle)
-print solve(a)
+b=solve(a)
+#print len(b)
+#print get_path(b)
+
+k = [[1, 3, 0, 4], [5, 2, 7, 8], [9, 6, 11, 12], [13, 10, 14, 15]]
+print get_path(solve(a))
+#print get_path(solve(a))
 #print initial_puzzle
 
 
