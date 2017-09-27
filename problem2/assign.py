@@ -5,13 +5,6 @@ k = int(sys.argv[2])
 m = int(sys.argv[3])
 n = int(sys.argv[4])
 
-import sys
-
-fileName = sys.argv[1]
-k = int(sys.argv[2])
-m = int(sys.argv[3])
-n = int(sys.argv[4])
-
 fileData = open(fileName, "r")
 data = fileData.read()
 
