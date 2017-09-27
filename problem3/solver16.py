@@ -1,16 +1,35 @@
 # put your 15 puzzle solver here!
+
+# In my understanding, the 15-puzzle question is an extended problem of 8-puzzle. However, in this case, we can move
+# 1, 2 or 3 tiles each time with uniform cost.
+# One important character of this problem is the initial state could be unsolvable when permutation is odd
+# The program reads the initial state from a file, then parse it in to a list of lists.
+# Eg. [[1, 2, 4, 3], [5, 6, 7, 8], [9, 10, 11, 12], [0, 13, 14, 15]]
+# Valid states include move 1, 2 or 3 tiles in 4 directions -- up, down, left and right
+# For example, with the initial state above, we have 6 valid states
+# [[1, 2, 4, 3], [5, 6, 7, 8], [9, 10, 11, 12], [13, 0, 14, 15]]
+# [[1, 2, 4, 3], [5, 6, 7, 8], [9, 10, 11, 12], [13, 14, 0, 15]]
+# [[1, 2, 4, 3], [5, 6, 7, 8], [9, 10, 11, 12], [13, 14, 15, 0]]
+# [[1, 2, 4, 3], [5, 6, 7, 8], [0, 10, 11, 12], [9, 13, 14, 15]]
+# [[1, 2, 4, 3], [5, 6, 7, 8], [0, 10, 11, 12], [9, 13, 14, 15]]
+# [[1, 2, 4, 3], [0, 6, 7, 8], [5, 10, 11, 12], [9, 13, 14, 15]]
+# [[0, 2, 4, 3], [1, 6, 7, 8], [5, 10, 11, 12], [9, 13, 14, 15]]
+# The successor function checks the position of blank space(0), then try to move tiles in 4 directions.
+
+
+
 from __future__ import division
 import random
-import sys
 from Queue import PriorityQueue
 import copy
+import sys
 
 
 
 
 #initial_puzzle = [[1, 2, 4, 3], [5, 6, 7, 8], [9, 10, 11, 12], [13, 14, 15, 0]]
-#puzzle_num = random.sample(range(16), 16)
-#initial_puzzle = [puzzle_num[i:i + 4] for i in xrange(0, len(puzzle_num), 4)]
+puzzle_num = random.sample(range(16), 16)
+initial_puzzle = [puzzle_num[i:i + 4] for i in xrange(0, len(puzzle_num), 4)]
 
 
 
@@ -22,14 +41,17 @@ def heuristic(puzzle):
                 count += 1
     return ((count-1)/3)
 
+
 def is_goal(puzzle):
     return puzzle == goal_state
+
 
 def find_empty(puzzle):
     for row in range(4):
         for col in range(4):
             if puzzle[row][col] == 0:
                 return row, col
+
 
 def move(puzzle, direction, size):
     zero = find_empty(puzzle)
@@ -147,12 +169,6 @@ def read_puzzle(file_directory):
     return puzzle
 
 
-def print_puzzle( puzzle):
-    for i in puzzle:
-        print i
-    print "\n"
-
-
 def successors(puzzle):
     state = []
     direction = ['L','R','U','D']
@@ -176,17 +192,18 @@ def successors(puzzle):
 
 # BFS
 def solve(puzzle):
-    dict={}
+    path_dict={}
     g = 0
     h = heuristic(puzzle)
     fringe = PriorityQueue()
     fringe.put((h+g, g,puzzle))
     while not fringe.empty():
         f, g_old, state = fringe.get()
-        dict[g]=state
+        # print f+g, state
+        path_dict[g]=state
         # print dict
         if is_goal(state):
-            return dict
+            return path_dict
         for s in successors(state):
             h = heuristic(s)
             g = g_old+1
@@ -195,13 +212,13 @@ def solve(puzzle):
     return False
 
 
-def get_path(dict):
+def get_path(path_dict):
     path=[]
-    for i in range(1,len(dict)):
-        row = find_empty(dict[i])[0]
-        col = find_empty(dict[i])[1]
-        direction_vertical = row - find_empty(dict[i-1])[0]
-        direction_horizontal = col - find_empty(dict[i-1])[1]
+    for i in range(1,len(path_dict)):
+        row = find_empty(path_dict[i])[0]
+        col = find_empty(path_dict[i])[1]
+        direction_vertical = row - find_empty(path_dict[i-1])[0]
+        direction_horizontal = col - find_empty(path_dict[i-1])[1]
         #print direction_vertical,direction_horizontal
         if direction_vertical > 0:
             move = 'U' + str(abs(direction_vertical)) + str(col+1)
@@ -218,40 +235,20 @@ def get_path(dict):
         #print path
 
     return ' '.join(path)
-# def main():
-#     a = [[1, 2, 3, 4], [5, 6, 7, 8], [9, 0, 10, 12], [13, 14, 15, 11]]
-#
-#     #print a
-#     move(a,"L",2)
-#     print a
-
-    #print a
-    #print p.initial_puzzle
-    #successors(initial_puzzle)
-    #print p.initial_puzzle
-    #print s
-    # print p.zero
-    # print
-    # print p.read_puzzle('sample.txt')
-    # print p.is_goal(p.read_puzzle('sample.txt'))
 
 
-file_directory = 'sample.txt'
-initial_puzzle = read_puzzle(file_directory)
-#zero = find_empty(initial_puzzle)
-goal_state = [[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12], [13, 14, 15, 0]]
+def main():
+    file_directory = sys.argv[1]
+    initial_puzzle = read_puzzle(file_directory)
+    #puzzle_num = random.sample(/Users/Joshua/Documents/CSCI B551/Assignment 1/github/ahnaik-abkanike-cw234-a1/problem3range(16), 16)
+    #initial_puzzle = [puzzle_num[i:i + 4] for i in xrange(0, len(puzzle_num), 4)]
+    puzzle_copy = copy.deepcopy(initial_puzzle)
 
-a = copy.deepcopy(initial_puzzle)
-b=solve(a)
-#print len(b)
-#print get_path(b)
-
-k = [[1, 3, 0, 4], [5, 2, 7, 8], [9, 6, 11, 12], [13, 10, 14, 15]]
-print get_path(solve(a))
-#print get_path(solve(a))
-#print initial_puzzle
+    global goal_state
+    goal_state = [[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12], [13, 14, 15, 0]]
+    print get_path(solve(puzzle_copy))
 
 
-# if __name__ == '__main__':
-#     main()
+if __name__ == '__main__':
+    main()
 
