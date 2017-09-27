@@ -34,6 +34,12 @@ for value in myDict:
     else:
         print("Not found")
 '''
+def getMax(totalVal):
+    myMax=-1
+    for key in totalVal:
+        if int(totalVal[key])>myMax:
+            myMax=totalVal[key]
+    return myMax
 
 def getM(value, group1, myDict):
     '''
@@ -65,9 +71,16 @@ def getN(value, group1, myDict):
     temp=[]
     temp = myDict[value]['preferences']
     temp = temp.split(",")
+    print("Printing temp: ", temp)
+    teamList=[]
+    teamList = group1[value]['team']
+    teamList = teamList.split(",")
+    print("Printing teamList: ", teamList)
     for each in temp:
         print("Check for: ", each)
-        if each not in group1[value]['team']:
+        if each == '_':
+            continue
+        if each not in teamList:
             val+=n
     print("In getN: ", value, val)
     return val
@@ -78,11 +91,20 @@ def shouldAddOne(value, group1, myDict):
     then add 1 (since he will spend 1 minute only)
     Return 1 or 0
     '''
-    if len(group1[value]['team']) != myDict[value]['rank']:
-        print("In shouldAddOne, for: ", value, ": ", 1)
+    count=0
+    temp=[]
+    temp=group1[value]['team']
+    temp=temp.split(",")
+    #print("Temping temp: ", temp, len(temp))
+    for each in temp:
+        #print("Each: ", each)
+        count=count+1
+    if count != int(myDict[value]['rank']):
+        #print("ShouldAddOne's Count is: ", count, " and ", int(myDict[value]['rank']))
+        #print("In shouldAddOne for: ", value, ": ", 1)
         return 1
     else:
-        print("In shouldAddOne, for: ", value, ": ", 0)
+        #print("In shouldAddOne, for: ", value, ": ", 0)
         return 0
 
 #group1 would be a dict containing data like djcran and his choices, preferences, notWannaWorks and his team
@@ -97,5 +119,8 @@ for value in myDict:
     totalVal.update({value: finalValue})
     print("--------------------- ", "Done with ", value, "as ", finalValue, " --------------------------------------------------")
 
-#print(group1)
+# Dict totalVal contains all the students along with their ranks as a <key, value> pair
 print(totalVal)
+
+val = getMax(totalVal)
+print(val)
