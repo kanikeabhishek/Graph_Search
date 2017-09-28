@@ -24,7 +24,7 @@
 # number of tiles.
 # Wherever the blank space is, there are always 6 possible states
 #
-# The heuristic function is the misplaced tiles divide by 3. For the regular 15-puzzle,
+# The heuristic function is the number of misplaced tiles divide by 3. For the regular 15-puzzle,
 # number of misplaced puzzle is admissible. And for this question, the goal state can be achieved at most
 # 3 times faster than the regular one (if we can solve it by moving 3 tiles at a time, and it is the optimal solution).
 # Therefore, when it divide by 3, the heuristic value are always less or equal than the minimal moves to goal state.
@@ -35,7 +35,11 @@
 # How this program works?
 # The algorithm #2 is used, and fringe is set as priority queue. Given an initial state, and put it into fringe
 # in the form of (f, total moves so far, initial state)
-# While the fringe is not empty, get the element with
+# While the fringe is not empty, get the element with highest priority(lowest cost), and update it into a dictionary.
+# (The dictionary update each time a state is taken from fringe, which means when the goal state is met, the dictionary
+# will have the optimal path.) Then, check if it is goal. If not
+# find its successors and calculate costs, then put into fringe.
+# After find the optimal solution,
 
 
 
@@ -226,7 +230,7 @@ def solve(puzzle):
     fringe.put((h+g, g,puzzle))
     while not fringe.empty():
         f, g_old, state = fringe.get()
-        # print f+g, state
+        print g, state
         path_dict[g]=state
         # print dict
         if is_goal(state):
@@ -266,6 +270,7 @@ def get_path(path_dict):
 
 def main():
     file_directory = sys.argv[1]
+    file_directory = 'sample.txt'
     initial_puzzle = read_puzzle(file_directory)
     #puzzle_num = random.sample(/Users/Joshua/Documents/CSCI B551/Assignment 1/github/ahnaik-abkanike-cw234-a1/problem3range(16), 16)
     #initial_puzzle = [puzzle_num[i:i + 4] for i in xrange(0, len(puzzle_num), 4)]
