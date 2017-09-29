@@ -107,6 +107,18 @@ def shouldAddOne(value, group1, myDict):
         #print("In shouldAddOne, for: ", value, ": ", 0)
         return 0
 
+def make_group(group1, totalVal):
+    student = max(totalVal, key=totalVal.get)
+    print(student)
+    #add each student in djcran's preference to his team
+    for each in myDict[student]['preferences']:
+        print(each)
+        each=each.split()
+        group1.update({student:{'team':','.join(str(each))}})
+        group1.update({each:{'team':','.join(str(student))}})
+
+    return group1
+
 #group1 would be a dict containing data like djcran and his choices, preferences, notWannaWorks and his team
 #djcran: {rank:0, preferences: chen464,zehzhang, notWannaWork: kapadia, team: chen464,kapadia,zehzhang}, etc.
 group1={}
@@ -122,5 +134,17 @@ for value in myDict:
 # Dict totalVal contains all the students along with their ranks as a <key, value> pair
 print(totalVal)
 
-val = getMax(totalVal)
-print(val)
+threshold = 400
+totalCost = 999999; #just hard coded to make it enter
+print(make_group(group1, totalVal))
+'''
+finalGroup={}
+while totalCost > threshold:
+    val = getMax(totalVal)
+    print("Max value is: ", val, " so will start grouping for it!")
+    finalGroup = make_groups(group1, totalVal)
+    currCost = get_cost(finalGroup)
+    if currCost<threshold:
+        break
+    threshold+=100
+'''
