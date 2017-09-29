@@ -118,7 +118,6 @@ def shouldAddOne(value, group1, myDict):
 def make_group(group1, totalVal):
     student = max(totalVal, key=totalVal.get)
     templist=[]
-    templist_s=[]
     templist.append(student)
     print(student)
     #add each student in djcran's preference to his team
@@ -127,7 +126,7 @@ def make_group(group1, totalVal):
         #each=each.split()
         templist.append(each)
         group1[student]['team'] = templist
-        group1[each]['team'] = templist_s
+        group1[each]['team'] = templist
 
     return group1
 
