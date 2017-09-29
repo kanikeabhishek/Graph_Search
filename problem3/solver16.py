@@ -71,7 +71,7 @@ def find_tile(puzzle,tile_num):
 #         for j in range(4):
 #             if puzzle[i][j] != goal_state[i][j]:
 #                 count += 1
-#     return count
+#     return (count-1)/3
 
 # heuristic function
 def heuristic(puzzle):
@@ -238,7 +238,7 @@ def successors(puzzle):
         elif d == 'U':
             for size in range(1, 3-zero[0]+1):
                 state.append(move(puzzle_copy,'U',size))
-        else:
+        elif d == 'D':
             for size in range(1, zero[0]+1):
                 state.append(move(puzzle_copy,'D',size))
     return state
@@ -252,14 +252,15 @@ def solve(puzzle):
     path = {}
     h = heuristic(puzzle)
     fringe = PriorityQueue()
-    fringe.put((h+g, g,puzzle))
+    fringe.put((h+g, g, puzzle))
     while not fringe.empty():
         f, g_old, state = fringe.get()
 
-        print f, g_old,state
+        #print f, g_old,state
         #path_dict[g_old] = state
 
         if is_goal(state):
+            #print path
             return path
         closed.append(state)
         for s in successors(state):
@@ -267,9 +268,7 @@ def solve(puzzle):
                 continue
             h = heuristic(s)
             g = g_old+1
-            # if h+g <= f:
-            #     continue
-            path[str(s)]=state
+            path[str(s)] = state
             fringe.put((g + h, g, s))
 
         # print fringe
@@ -281,8 +280,9 @@ def get_path(path, initial_state, goal_state):
     while state != initial_state:
         state = path[str(state)]
         path_list.append(state)
-    #p.append(start)  # optional
+    #path_list.append(initial_state)  # optional
     path_list.reverse()  # optional
+    print path_list
     return path_list
 
 def print_path(path_list):
