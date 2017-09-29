@@ -1,10 +1,13 @@
 import sys
 
-fileName = sys.argv[1]
-k = int(sys.argv[2])
-m = int(sys.argv[3])
-n = int(sys.argv[4])
-
+# fileName = sys.argv[1]
+# k = int(sys.argv[2])
+# m = int(sys.argv[3])
+# n = int(sys.argv[4])
+fileName = 'test.txt'
+k =160
+m=31
+n=10
 fileData = open(fileName, "r")
 data = fileData.read()
 
@@ -15,9 +18,10 @@ data = data.split("\n")
 myDict = {}
 for element in data:
     element=element.split()
-    element[2]=[items for each in element[2] for items in each.split(',')]
-    element[3]=[items for each in element[3] for items in each.split(',')]
-    myDict.update({element[0]:{'rank':[element[1]], 'preferences':[element[2]], 'notWannaWork':[element[3]]}})
+    element[2]=[items for items in element[2].split(',')]
+    element[3] = [items for items in element[3].split(',')]
+    myDict.update({element[0]:{'rank':int(element[1]), 'preferences':element[2], 'notWannaWork':element[3]}})
+    #print myDict
 
 '''
 #Can ignore!
@@ -52,7 +56,9 @@ def getM(value, group1, myDict):
     val=0
     for each in group1[value]['team']:
         if each in myDict[value]['notWannaWork']:
+
             val+=m
+            #print "!!!!!!!!!!!!!!!!!!!%s" % val
     print("In getM: ", value, val)
     return val
 
@@ -101,7 +107,7 @@ def shouldAddOne(value, group1, myDict):
     #for each in temp:
         #print("Each: ", each)
         #count=count+1
-    if len(temp) != int(myDict[value]['rank'][0]):
+    if len(temp) != myDict[value]['rank']:
         #print("ShouldAddOne's Count is: ", count, " and ", int(myDict[value]['rank']))
         #print("In shouldAddOne for: ", value, ": ", 1)
         return 1
@@ -120,8 +126,8 @@ def make_group(group1, totalVal):
         print("What is each?: ", type(each))
         #each=each.split()
         templist.append(each)
-        group1.update({student:{'team': templist}})
-        group1.update({each:{'team':templist_s}})
+        group1[student]['team'] = templist
+        group1[each]['team'] = templist_s
 
     return group1
 
