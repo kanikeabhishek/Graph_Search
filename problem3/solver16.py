@@ -74,19 +74,19 @@ def find_tile(puzzle,tile_num):
 #     return (count-1)/3
 
 # heuristic function
-def heuristic(puzzle):
-    sum = 0
-    tile_num_list = []
-    for num in range(1,16):
-        tile_num_list.append(find_tile(puzzle,num))
-        #print tile_num_list
-    for i in range(0,15):
-        #print tile_num_list[i]
-        for k in range(0,2):
-            #print tile_num_list[i][k]
-            #print goal_state_list[i][k]
-            sum = sum + abs(tile_num_list[i][k]-goal_state_list[i][k])
-    return sum/3
+# def heuristic(puzzle):
+#     sum = 0
+#     tile_num_list = []
+#     for num in range(1,16):
+#         tile_num_list.append(find_tile(puzzle,num))
+#         #print tile_num_list
+#     for i in range(0,15):
+#         #print tile_num_list[i]
+#         for k in range(0,2):
+#             #print tile_num_list[i][k]
+#             #print goal_state_list[i][k]
+#             sum = sum + abs(tile_num_list[i][k]-goal_state_list[i][k])
+#     return sum/3
 
 
 
@@ -268,7 +268,8 @@ def solve(puzzle):
                 continue
             h = heuristic(s)
             g = g_old+1
-            path[str(s)] = state
+            if str(s) not in path.keys():
+                path[str(s)] = state
             fringe.put((g + h, g, s))
 
         # print fringe
@@ -282,7 +283,7 @@ def get_path(path, initial_state, goal_state):
         path_list.append(state)
     #path_list.append(initial_state)  # optional
     path_list.reverse()  # optional
-    print path_list
+    #print path_list
     return path_list
 
 def print_path(path_list):
