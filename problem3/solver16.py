@@ -313,7 +313,7 @@ def print_path(path_list):
 
 def main():
     file_directory = sys.argv[1]
-    file_directory = 'sample.txt'
+    #file_directory = 'sample.txt'
     initial_puzzle = read_puzzle(file_directory)
     #puzzle_num = random.sample(/Users/Joshua/Documents/CSCI B551/Assignment 1/github/ahnaik-abkanike-cw234-a1/problem3range(16), 16)
     #initial_puzzle = [puzzle_num[i:i + 4] for i in xrange(0, len(puzzle_num), 4)]
