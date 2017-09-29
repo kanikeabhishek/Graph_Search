@@ -74,19 +74,19 @@ def find_tile(puzzle,tile_num):
 #     return (count-1)/3
 
 # heuristic function
-# def heuristic(puzzle):
-#     sum = 0
-#     tile_num_list = []
-#     for num in range(1,16):
-#         tile_num_list.append(find_tile(puzzle,num))
-#         #print tile_num_list
-#     for i in range(0,15):
-#         #print tile_num_list[i]
-#         for k in range(0,2):
-#             #print tile_num_list[i][k]
-#             #print goal_state_list[i][k]
-#             sum = sum + abs(tile_num_list[i][k]-goal_state_list[i][k])
-#     return sum/3
+def heuristic(puzzle):
+    sum = 0
+    tile_num_list = []
+    for num in range(1,16):
+        tile_num_list.append(find_tile(puzzle,num))
+        #print tile_num_list
+    for i in range(0,15):
+        #print tile_num_list[i]
+        for k in range(0,2):
+            #print tile_num_list[i][k]
+            #print goal_state_list[i][k]
+            sum = sum + abs(tile_num_list[i][k]-goal_state_list[i][k])
+    return sum/3
 
 
 
