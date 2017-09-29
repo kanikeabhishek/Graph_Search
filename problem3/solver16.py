@@ -24,8 +24,8 @@
 # number of tiles.
 # Wherever the blank space is, there are always 6 possible states
 #
-# The heuristic function is the number of misplaced tiles divide by 3. For the regular 15-puzzle,
-# number of misplaced puzzle is admissible. And for this question, the goal state can be achieved at most
+# The heuristic function is the manhattan distance to the goal state divide by 3. For the regular 15-puzzle,
+# manhattan distance is admissible. And for this question, the goal state can be achieved at most
 # 3 times faster than the regular one (if we can solve it by moving 3 tiles at a time, and it is the optimal solution).
 # Therefore, when it divide by 3, the heuristic value are always less or equal than the minimal moves to goal state.
 # Since the division creates decimal points, division module is imported.
@@ -37,9 +37,9 @@
 # in the form of (f, total moves so far, initial state)
 # While the fringe is not empty, get the element with highest priority(lowest cost), and update it into a dictionary.
 # (The dictionary update each time a state is taken from fringe, which means when the goal state is met, the dictionary
-# will have the optimal path.) Then, check if it is goal. If not
-# find its successors and calculate costs, then put into fringe.
-# After find the optimal solution,
+# will have the optimal path.) Then, check if it is goal. If not put it into CLOSED list.
+# Then find its successors and if the successor state is in CLOSED, then we discard it. Otherwise, calculate costs, then put into fringe.
+# After finding the optimal solution, we use the dictionary we had in solve process to generate outputs.
 
 
 
@@ -48,23 +48,46 @@ import random
 from Queue import PriorityQueue
 import copy
 import sys
+import math
 
 
 
 
 #initial_puzzle = [[1, 2, 4, 3], [5, 6, 7, 8], [9, 10, 11, 12], [13, 14, 15, 0]]
-puzzle_num = random.sample(range(16), 16)
-initial_puzzle = [puzzle_num[i:i + 4] for i in xrange(0, len(puzzle_num), 4)]
+#puzzle_num = random.sample(range(16), 16)
+#initial_puzzle = [puzzle_num[i:i + 4] for i in xrange(0, len(puzzle_num), 4)]
 
+
+def find_tile(puzzle,tile_num):
+    for row in range(4):
+        for col in range(4):
+            if puzzle[row][col] == tile_num:
+                return row, col
+
+# heuristic function
+# def heuristic(puzzle):
+#     count = 0
+#     for i in range(4):
+#         for j in range(4):
+#             if puzzle[i][j] != goal_state[i][j]:
+#                 count += 1
+#     return count
 
 # heuristic function
 def heuristic(puzzle):
-    count = 0
-    for i in range(4):
-        for j in range(4):
-            if puzzle[i][j] != goal_state[i][j]:
-                count += 1
-    return ((count-1)/3)
+    sum = 0
+    tile_num_list = []
+    for num in range(1,16):
+        tile_num_list.append(find_tile(puzzle,num))
+        #print tile_num_list
+    for i in range(0,15):
+        #print tile_num_list[i]
+        for k in range(0,2):
+            #print tile_num_list[i][k]
+            #print goal_state_list[i][k]
+            sum = sum + abs(tile_num_list[i][k]-goal_state_list[i][k])
+    return sum/3
+
 
 
 # check if state is goal state
@@ -224,32 +247,52 @@ def successors(puzzle):
 # BFS
 def solve(puzzle):
     path_dict={}
+    closed = []
     g = 0
+    path = {}
     h = heuristic(puzzle)
     fringe = PriorityQueue()
     fringe.put((h+g, g,puzzle))
     while not fringe.empty():
         f, g_old, state = fringe.get()
-        print g, state
-        path_dict[g]=state
-        # print dict
+
+        print f, g_old,state
+        #path_dict[g_old] = state
+
         if is_goal(state):
-            return path_dict
+            return path
+        closed.append(state)
         for s in successors(state):
+            if s in closed:
+                continue
             h = heuristic(s)
             g = g_old+1
+            # if h+g <= f:
+            #     continue
+            path[str(s)]=state
             fringe.put((g + h, g, s))
+
         # print fringe
     return False
 
+def get_path(path, initial_state, goal_state):
+    state = goal_state
+    path_list = [state]
+    while state != initial_state:
+        state = path[str(state)]
+        path_list.append(state)
+    #p.append(start)  # optional
+    path_list.reverse()  # optional
+    return path_list
 
-def get_path(path_dict):
+def print_path(path_list):
+    # print path_dict
     path=[]
-    for i in range(1,len(path_dict)):
-        row = find_empty(path_dict[i])[0]
-        col = find_empty(path_dict[i])[1]
-        direction_vertical = row - find_empty(path_dict[i-1])[0]
-        direction_horizontal = col - find_empty(path_dict[i-1])[1]
+    for i in range(1,len(path_list)):
+        row = find_empty(path_list[i])[0]
+        col = find_empty(path_list[i])[1]
+        direction_vertical = row - find_empty(path_list[i-1])[0]
+        direction_horizontal = col - find_empty(path_list[i-1])[1]
         #print direction_vertical,direction_horizontal
         if direction_vertical > 0:
             move = 'U' + str(abs(direction_vertical)) + str(col+1)
@@ -276,10 +319,16 @@ def main():
     #initial_puzzle = [puzzle_num[i:i + 4] for i in xrange(0, len(puzzle_num), 4)]
     puzzle_copy = copy.deepcopy(initial_puzzle)
 
-    global goal_state
-    goal_state = [[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12], [13, 14, 15, 0]]
-    print get_path(solve(puzzle_copy))
 
+    global goal_state
+    global goal_state_list
+    goal_state = [[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12], [13, 14, 15, 0]]
+    goal_state_list = [(0, 0), (0, 1), (0, 2), (0, 3), (1, 0), (1, 1), (1, 2), (1, 3), (2, 0), (2, 1), (2, 2), (2, 3),
+                       (3, 0), (3, 1), (3, 2)]
+    #print get_path(solve(puzzle_copy))
+    #print get_path(solve(puzzle_copy), initial_puzzle, goal_state)
+    print print_path(get_path(solve(puzzle_copy),initial_puzzle,goal_state))
+    #print heuristic(initial_puzzle)
 
 if __name__ == '__main__':
     main()
