@@ -15,7 +15,9 @@ data = data.split("\n")
 myDict = {}
 for element in data:
     element=element.split()
-    myDict.update({element[0]:{'rank':element[1], 'preferences':element[2], 'notWannaWork':element[3]}})
+    element[2]=[items for each in element[2] for items in each.split(',')]
+    element[3]=[items for each in element[3] for items in each.split(',')]
+    myDict.update({element[0]:{'rank':[element[1]], 'preferences':[element[2]], 'notWannaWork':[element[3]]}})
 
 '''
 #Can ignore!
@@ -70,11 +72,11 @@ def getN(value, group1, myDict):
     val=0
     temp=[]
     temp = myDict[value]['preferences']
-    temp = temp.split(",")
+    #temp=[items for each in temp for items in each.split(',')]
     print("Printing temp: ", temp)
     teamList=[]
     teamList = group1[value]['team']
-    teamList = teamList.split(",")
+    #teamList = teamList.split(",")
     print("Printing teamList: ", teamList)
     for each in temp:
         print("Check for: ", each)
@@ -94,18 +96,34 @@ def shouldAddOne(value, group1, myDict):
     count=0
     temp=[]
     temp=group1[value]['team']
-    temp=temp.split(",")
+    #temp=temp.split(",")
     #print("Temping temp: ", temp, len(temp))
-    for each in temp:
+    #for each in temp:
         #print("Each: ", each)
-        count=count+1
-    if count != int(myDict[value]['rank']):
+        #count=count+1
+    if len(temp) != int(myDict[value]['rank'][0]):
         #print("ShouldAddOne's Count is: ", count, " and ", int(myDict[value]['rank']))
         #print("In shouldAddOne for: ", value, ": ", 1)
         return 1
     else:
         #print("In shouldAddOne, for: ", value, ": ", 0)
         return 0
+
+def make_group(group1, totalVal):
+    student = max(totalVal, key=totalVal.get)
+    templist=[]
+    templist_s=[]
+    templist.append(student)
+    print(student)
+    #add each student in djcran's preference to his team
+    for each in myDict[student]['preferences']:
+        print("What is each?: ", type(each))
+        #each=each.split()
+        templist.append(each)
+        group1.update({student:{'team': templist}})
+        group1.update({each:{'team':templist_s}})
+
+    return group1
 
 #group1 would be a dict containing data like djcran and his choices, preferences, notWannaWorks and his team
 #djcran: {rank:0, preferences: chen464,zehzhang, notWannaWork: kapadia, team: chen464,kapadia,zehzhang}, etc.
@@ -114,7 +132,7 @@ totalVal={}
 
 for value in myDict:
     #treating each individual as a group
-    group1.update({value:{'rank':"", 'preferences':"", 'notWannaWork':"", 'team':""}})
+    group1.update({value:{'rank':[], 'preferences':[], 'notWannaWork':[], 'team':[]}})
     finalValue = shouldAddOne(value, group1, myDict) + getM(value, group1, myDict) + getN(value, group1, myDict) + getK(value, group1, myDict)
     totalVal.update({value: finalValue})
     print("--------------------- ", "Done with ", value, "as ", finalValue, " --------------------------------------------------")
@@ -122,5 +140,17 @@ for value in myDict:
 # Dict totalVal contains all the students along with their ranks as a <key, value> pair
 print(totalVal)
 
-val = getMax(totalVal)
-print(val)
+threshold = 400
+totalCost = 999999; #just hard coded to make it enter
+print(make_group(group1, totalVal))
+'''
+finalGroup={}
+while totalCost > threshold:
+    val = getMax(totalVal)
+    print("Max value is: ", val, " so will start grouping for it!")
+    finalGroup = make_groups(group1, totalVal)
+    currCost = get_cost(finalGroup)
+    if currCost<threshold:
+        break
+    threshold+=100
+'''
