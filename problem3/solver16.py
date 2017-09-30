@@ -89,6 +89,18 @@ def heuristic(puzzle):
     return sum/3
 
 
+def heuristic(puzzle):
+    sum = 0
+    tile_num_list = []
+    for num in range(1,16):
+        tile_num_list.append(find_tile(puzzle,num))
+        #print tile_num_list
+    for i in range(0,15):
+        If tile_num_list[i][0] != goal_state_list[i][0]) and tile_num_list[i][1] != goal_state_list[i][1]):
+        sum += 1
+    return sum
+    
+
 
 # check if state is goal state
 def is_goal(puzzle):
