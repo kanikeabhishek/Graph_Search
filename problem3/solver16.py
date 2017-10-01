@@ -4,7 +4,8 @@
 # In my understanding, the 15-puzzle question is an extended problem of 8-puzzle. However, in this case, we can move
 # 1, 2 or 3 tiles each time with uniform cost.
 # One important character of this problem is the initial state could be unsolvable when permutation inversion is odd
-#
+# This program check if permutation inversion is an odd number, and raise an error.
+
 # The program reads the initial state from a file, then parse it in to a list of lists.
 # Eg. [[1, 2, 4, 3], [5, 6, 7, 8], [9, 10, 11, 12], [0, 13, 14, 15]]
 #
