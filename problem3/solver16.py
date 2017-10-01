@@ -292,7 +292,6 @@ def solve(puzzle):
     while not fringe.empty():
         f, g_old, state = fringe.get()
         #print f, g_old,state
-        #path_dict[g_old] = state
         if is_goal(state):
             return path
         else:
@@ -303,6 +302,8 @@ def solve(puzzle):
             h = heuristic(s)
             g = g_old+1
 
+            # Learning from Piazza (https://piazza.com/class/j6lbw30o3z35cw?cid=161)
+            # Credit to Chris Falter
             astate = path.get(str(s))
             if not astate:
                 path[str(s)] = state
@@ -356,9 +357,7 @@ def main():
     #file_directory = 'sample.txt'
     global initial_puzzle
     initial_puzzle = read_puzzle(file_directory)
-    #puzzle_num = random.sample(/Users/Joshua/Documents/CSCI B551/Assignment 1/github/ahnaik-abkanike-cw234-a1/problem3range(16), 16)
-    #initial_puzzle = [puzzle_num[i:i + 4] for i in xrange(0, len(puzzle_num), 4)]
-    #puzzle_copy = copy.deepcopy(initial_puzzle)
+
 
 
     global goal_state
@@ -367,8 +366,7 @@ def main():
     # coordinates for goal state
     goal_state_list = [(0, 0), (0, 1), (0, 2), (0, 3), (1, 0), (1, 1), (1, 2), (1, 3), (2, 0), (2, 1), (2, 2), (2, 3),
                        (3, 0), (3, 1), (3, 2)]
-    #print get_path(solve(puzzle_copy))
-    #print get_path(solve(puzzle_copy), initial_puzzle, goal_state)
+
     print print_path(get_path(solve(initial_puzzle),initial_puzzle,goal_state))
     #print heuristic(initial_puzzle)
 
