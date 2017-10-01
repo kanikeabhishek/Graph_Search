@@ -1,5 +1,5 @@
 import sys
-
+import copy as cp
 # get the parameters from the command line
 fileName = sys.argv[1]
 k = int(sys.argv[2])
@@ -147,6 +147,25 @@ def make_groups(group1, totalVal):
             continue
         # below if condition ensures that the same person is not added twice
         if len(group1[each]['team']) > 1:
+            tmp_group = cp.deepcopy(group1)
+            prev_team = tmp_group[each]['team']
+            prev_team.pop(prev_team.index(each))
+            stud_tmp_list = cp.deepcopy(templist)
+            stud_tmp_list.append(each)
+            tmp_group[student]['team'] = stud_tmp_list
+            tmp_group[each]['team'] = stud_tmp_list
+            tmp_cost = update_cost(tmp_group)
+            curr_cost = update_cost(group1)
+            t_cost = tmp_cost[student] + tmp_cost[each]
+            c_cost = curr_cost[student] + curr_cost[each]
+            for stud in prev_team:
+                t_cost += tmp_cost[stud]
+                c_cost += curr_cost[stud]
+            if t_cost < c_cost:
+                templist.append(each)
+                group1 = tmp_group
+                group1[student]['team'] = templist
+                group1[each]['team'] = templist
             continue
         templist.append(each)
         group1[student]['team'] = templist
