@@ -33,15 +33,15 @@ for element in data:
     myDict.update({element[0]: {'rank': int(element[1]), 'preferences': element[2], 'notWannaWork': element[3]}})
     people.append(element[0])
 
-def getMax(totalVal):
-    '''
-    Given a dictionary as the input, it iterates over the <key, value> pairs and returns the maximum value
-    '''
-    myMax = -1
-    for key in totalVal:
-        if int(totalVal[key]) > myMax:
-            myMax = totalVal[key]
-    return myMax
+# def getMax(totalVal):
+#     '''
+#     Given a dictionary as the input, it iterates over the <key, value> pairs and returns the maximum value
+#     '''
+#     myMax = -1
+#     for key in totalVal:
+#         if int(totalVal[key]) > myMax:
+#             myMax = totalVal[key]
+#     return myMax
 
 
 def getM(group, myDict):
@@ -67,13 +67,13 @@ def getM(group, myDict):
     return val
 
 
-def getK(value, group1, myDict):
+def getK(group_num):
     '''
     getK() works as follows:
     it returns the value of `k`
     Also, technically this function can be skipped; but it is kept as is, as a good coding practice
     '''
-    return k
+    return k*group_num
 
 
 def getN(group, myDict):
@@ -121,67 +121,67 @@ def shouldAddOne(group, myDict):
     return count
 
 
-def get_currCost(totalVal):
-    '''
-    This function is used to calculate the cost, given a dictionary as an input
-    '''
-    value = 0
-    for key in totalVal:
-        value += totalVal[key]
-    return value
+# def get_currCost(totalVal):
+#     '''
+#     This function is used to calculate the cost, given a dictionary as an input
+#     '''
+#     value = 0
+#     for key in totalVal:
+#         value += totalVal[key]
+#     return value
+#
+#
+# def update_cost(finalGroup):
+#     '''
+#     As the name suggests, the update_cost() function is used to update the cost after the students are grouped.
+#     It calculates the cost for each student and returns the values as a dictionary
+#     '''
+#     temp = 0;
+#     totalVal = {}
+#     for each in finalGroup:
+#         temp = getM(each, finalGroup, myDict) + getN(each, finalGroup, myDict) + shouldAddOne(each, finalGroup, myDict)
+#         totalVal[each] = temp
+#         #print finalGroup
+#     return totalVal
 
 
-def update_cost(finalGroup):
-    '''
-    As the name suggests, the update_cost() function is used to update the cost after the students are grouped.
-    It calculates the cost for each student and returns the values as a dictionary
-    '''
-    temp = 0;
-    totalVal = {}
-    for each in finalGroup:
-        temp = getM(each, finalGroup, myDict) + getN(each, finalGroup, myDict) + shouldAddOne(each, finalGroup, myDict)
-        totalVal[each] = temp
-        #print finalGroup
-    return totalVal
-
-
-def make_groups(group1, totalVal):
-    '''
-    As the name suggests, the make_groups() function is used to generate groups.  It works on the student with the maximum current cost
-    and tries to allocate groups as per his preference.  It also ensures that the same student is not added twice in a group.
-    '''
-    student = max(totalVal, key=totalVal.get)
-    #print totalVal
-    #print max(totalVal, key=totalVal.get)
-    tmp_student = totalVal
-    #tmp_student = random.choice(totalVal)
-    foundMax = False
-    while not foundMax:
-        if myDict[student]['preferences'][0] == '_':
-            tmp_student.pop(student)
-            student = max(tmp_student, key=totalVal.get)
-            #print student
-        else:
-            foundMax = True
-    templist = []
-    templist.append(student)
-    #print closed
-    #print templist
-    # add each student in djcran's preference to his team
-    #print myDict
-    #temp = myDict[student]['preferences'][0]
-    for each in myDict[student]['preferences']:
-
-        if each == '_':
-            continue
-        # below if condition ensures that the same person is not added twice
-        if len(group1[each]['team']) > 1:
-            continue
-        templist.append(each)
-        group1[student]['team'] = templist
-        group1[each]['team'] = templist
-        temp = each
-    return group1
+# def make_groups(group1, totalVal):
+#     '''
+#     As the name suggests, the make_groups() function is used to generate groups.  It works on the student with the maximum current cost
+#     and tries to allocate groups as per his preference.  It also ensures that the same student is not added twice in a group.
+#     '''
+#     student = max(totalVal, key=totalVal.get)
+#     #print totalVal
+#     #print max(totalVal, key=totalVal.get)
+#     tmp_student = totalVal
+#     #tmp_student = random.choice(totalVal)
+#     foundMax = False
+#     while not foundMax:
+#         if myDict[student]['preferences'][0] == '_':
+#             tmp_student.pop(student)
+#             student = max(tmp_student, key=totalVal.get)
+#             #print student
+#         else:
+#             foundMax = True
+#     templist = []
+#     templist.append(student)
+#     #print closed
+#     #print templist
+#     # add each student in djcran's preference to his team
+#     #print myDict
+#     #temp = myDict[student]['preferences'][0]
+#     for each in myDict[student]['preferences']:
+#
+#         if each == '_':
+#             continue
+#         # below if condition ensures that the same person is not added twice
+#         if len(group1[each]['team']) > 1:
+#             continue
+#         templist.append(each)
+#         group1[student]['team'] = templist
+#         group1[each]['team'] = templist
+#         temp = each
+#     return group1
 
 # group1 = {}
 # for value in myDict:
@@ -284,7 +284,7 @@ total_group=successors(people)
 cost_all = {}
 another_dict={}
 for comb in total_group:
-    cost_all[str(comb)] = shouldAddOne(comb,myDict) + getM(comb, myDict) +  getN(comb, myDict) + 320
+    cost_all[str(comb)] = shouldAddOne(comb,myDict) + getM(comb, myDict) +  getN(comb, myDict) + getK(len(comb))
     another_dict[str(comb)]= comb
 
 s = another_dict[min(cost_all, key=cost_all.get)]
