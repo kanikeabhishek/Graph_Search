@@ -44,22 +44,17 @@
 #
 # After finding the goal, we use the dictionary to back tracking from goal state to initial state, and then
 # generate outputs.
+#
+# We tried multiple heuristic functions to solve the puzzle. In order to make 'number of misplaced tiles' and
+# 'manhattan distance' to be admissible, we divide them by 3 (since we know it reaches goal state at most 3 times
+# faster than regular 15-puzzle). However, both of them runs slow for complicated case(moves > 10). Then we tried
+# number of tiles not in the goal row and column, and got almost same runtime. Then the linear conflicts was implemented
+# and significantly improved the runtime.
 
 
-
-#from __future__ import division
-import random
 from Queue import PriorityQueue
 import copy
 import sys
-import math
-
-
-
-
-#initial_puzzle = [[1, 2, 4, 3], [5, 6, 7, 8], [9, 10, 11, 12], [13, 14, 15, 0]]
-#puzzle_num = random.sample(range(16), 16)
-#initial_puzzle = [puzzle_num[i:i + 4] for i in xrange(0, len(puzzle_num), 4)]
 
 
 def find_tile(puzzle,tile_num):
@@ -68,6 +63,7 @@ def find_tile(puzzle,tile_num):
             if puzzle[row][col] == tile_num:
                 return row, col
 
+# number of misplace tiles / 3
 # heuristic function
 # def heuristic(puzzle):
 #     count = 0
@@ -77,6 +73,7 @@ def find_tile(puzzle,tile_num):
 #                 count += 1
 #     return (count-1)/3
 
+# manhattan distance / 3
 # heuristic function
 # def heuristic(puzzle):
 #     sum = 0
@@ -92,6 +89,7 @@ def find_tile(puzzle,tile_num):
 #             sum = sum + abs(tile_num_list[i][k]-goal_state_list[i][k])
 #     return sum/3
 
+# linear conflicts
 def heuristic(puzzle):
     count = 0
     for i in range(0,4):
@@ -117,22 +115,8 @@ def heuristic(puzzle):
                 continue
     return count
 
-# def heuristic(puzzle):
-#     sum = 0
-#     tile_num_list = []
-#     for num in range(1,16):
-#         tile_num_list.append(find_tile(puzzle,num))
-#         #print tile_num_list
-#     for i in range(0,15):
-#         #print tile_num_list[i]
-#         for k in range(0,2):
-#             #print tile_num_list[i][k]
-#             #print goal_state_list[i][k]
-#             if tile_num_list[i][k] != goal_state_list[i][k] :
-#                 sum +=1
-#     return sum
 
-
+# number of tiles not in the goal row and goal column
 # def heuristic(puzzle):
 #     sum = 0
 #     tile_num_list = []
@@ -151,7 +135,7 @@ def is_goal(puzzle):
     return puzzle == goal_state
 
 
-# find the position of black space
+# find the position of blank space
 # return the row and col number
 def find_empty(puzzle):
     for row in range(4):
@@ -298,7 +282,7 @@ def successors(puzzle):
 
 # BFS
 def solve(puzzle):
-    path_dict={}
+    #path_dict={}
     closed = []
     g = 0
     path = {}
@@ -307,10 +291,8 @@ def solve(puzzle):
     fringe.put((h+g, g, puzzle))
     while not fringe.empty():
         f, g_old, state = fringe.get()
-
         #print f, g_old,state
         #path_dict[g_old] = state
-
         if is_goal(state):
             return path
         else:
@@ -320,16 +302,16 @@ def solve(puzzle):
                 continue
             h = heuristic(s)
             g = g_old+1
-            # if str(s) not in path.keys():
-            #     path[str(s)] = state
-            object = path.get(str(s))
-            if not object:
+
+            astate = path.get(str(s))
+            if not astate:
                 path[str(s)] = state
             fringe.put((g + h, g, s))
 
         # print fringe
     return False
 
+# backtracking the path from goal_state to initial state using path dictionary
 def get_path(path, initial_state, goal_state):
     state = goal_state
     path_list = [state]
@@ -341,6 +323,7 @@ def get_path(path, initial_state, goal_state):
     #print path_list
     return path_list
 
+# Format the list into required output
 def print_path(path_list):
     # print path_dict
     path=[]
@@ -367,6 +350,7 @@ def print_path(path_list):
     return ' '.join(path)
 
 
+# main function
 def main():
     file_directory = sys.argv[1]
     #file_directory = 'sample.txt'
@@ -380,6 +364,7 @@ def main():
     global goal_state
     global goal_state_list
     goal_state = [[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12], [13, 14, 15, 0]]
+    # coordinates for goal state
     goal_state_list = [(0, 0), (0, 1), (0, 2), (0, 3), (1, 0), (1, 1), (1, 2), (1, 3), (2, 0), (2, 1), (2, 2), (2, 3),
                        (3, 0), (3, 1), (3, 2)]
     #print get_path(solve(puzzle_copy))
