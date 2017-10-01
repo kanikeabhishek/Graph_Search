@@ -74,19 +74,19 @@ def find_tile(puzzle,tile_num):
 #     return (count-1)/3
 
 # heuristic function
-# def heuristic(puzzle):
-#     sum = 0
-#     tile_num_list = []
-#     for num in range(1,16):
-#         tile_num_list.append(find_tile(puzzle,num))
-#         #print tile_num_list
-#     for i in range(0,15):
-#         #print tile_num_list[i]
-#         for k in range(0,2):
-#             #print tile_num_list[i][k]
-#             #print goal_state_list[i][k]
-#             sum = sum + abs(tile_num_list[i][k]-goal_state_list[i][k])
-#     return sum/3
+def heuristic(puzzle):
+    sum = 0
+    tile_num_list = []
+    for num in range(1,16):
+        tile_num_list.append(find_tile(puzzle,num))
+        #print tile_num_list
+    for i in range(0,15):
+        #print tile_num_list[i]
+        for k in range(0,2):
+            #print tile_num_list[i][k]
+            #print goal_state_list[i][k]
+            sum = sum + abs(tile_num_list[i][k]-goal_state_list[i][k])
+    return sum/3
 
 # def heuristic(puzzle):
 #     sum = 0
@@ -101,19 +101,19 @@ def find_tile(puzzle,tile_num):
 #             #print goal_state_list[i][k]
 #             if tile_num_list[i][k] != goal_state_list[i][k] :
 #                 sum +=1
-#     return sum/3
+#     return sum
 
 
-def heuristic(puzzle):
-    sum = 0
-    tile_num_list = []
-    for num in range(1,16):
-        tile_num_list.append(find_tile(puzzle,num))
-        #print tile_num_list
-    for i in range(0,15):
-        if tile_num_list[i][0] != goal_state_list[i][0] and tile_num_list[i][1] != goal_state_list[i][1]:
-            sum += 1
-    return sum
+# def heuristic(puzzle):
+#     sum = 0
+#     tile_num_list = []
+#     for num in range(1,16):
+#         tile_num_list.append(find_tile(puzzle,num))
+#         #print tile_num_list
+#     for i in range(0,15):
+#         if tile_num_list[i][0] != goal_state_list[i][0] and tile_num_list[i][1] != goal_state_list[i][1]:
+#             sum += 1
+#     return sum
     
 
 
@@ -134,7 +134,8 @@ def find_empty(puzzle):
 # return a state after move 1, 2 or 3 tiles in 1 of the 4 directions
 def move(puzzle, direction, size):
     zero = find_empty(puzzle)
-    puzzle_temp = copy.deepcopy(puzzle)
+    puzzle_temp = [x[:] for x in puzzle]
+    #print puzzle_temp
     if direction == 'L':
         if size == 1:
 
@@ -284,7 +285,7 @@ def solve(puzzle):
     while not fringe.empty():
         f, g_old, state = fringe.get()
 
-        print f, g_old,state
+        #print f, g_old,state
         #path_dict[g_old] = state
 
         if is_goal(state):
@@ -347,6 +348,7 @@ def print_path(path_list):
 def main():
     file_directory = sys.argv[1]
     #file_directory = 'sample.txt'
+    global initial_puzzle
     initial_puzzle = read_puzzle(file_directory)
     #puzzle_num = random.sample(/Users/Joshua/Documents/CSCI B551/Assignment 1/github/ahnaik-abkanike-cw234-a1/problem3range(16), 16)
     #initial_puzzle = [puzzle_num[i:i + 4] for i in xrange(0, len(puzzle_num), 4)]
@@ -361,7 +363,7 @@ def main():
     #print get_path(solve(puzzle_copy))
     #print get_path(solve(puzzle_copy), initial_puzzle, goal_state)
     print print_path(get_path(solve(initial_puzzle),initial_puzzle,goal_state))
-    print heuristic(initial_puzzle)
+    #print heuristic(initial_puzzle)
 
 if __name__ == '__main__':
     main()
