@@ -10,12 +10,12 @@ fileData = open(fileName, "r")
 data = fileData.read()
 
 # convert data into a list (separated by a ',')
-data = data.split("\n")
+data = data.rstrip('\n').split("\n")
+
 
 totalVal = {}
 myDict = {}
 for element in data:
-
     '''
     This loop is to create a dictionary to represent the input format in a better way for processing it
     The key would be the user ID
@@ -23,16 +23,13 @@ for element in data:
     'preferences' represents the students the current user (student) prefers to work with
     'notWannaWork' represents the students the current user (student) does not prefer to work with
     '''
-    try:
-        #print element
-        element = element.split()
-        # print element[2]
-        element[2] = [items for items in element[2].split(',')]
-        # print element[2]
-        element[3] = [items for items in element[3].split(',')]
-        myDict.update({element[0]: {'rank': int(element[1]), 'preferences': element[2], 'notWannaWork': element[3]}})
-    except:
-        continue
+    element = element.split()
+    # print element[2]
+    element[2] = [items for items in element[2].split(',')]
+    # print element[2]
+    element[3] = [items for items in element[3].split(',')]
+    myDict.update({element[0]: {'rank': int(element[1]), 'preferences': element[2], 'notWannaWork': element[3]}})
+
 
 
 def getMax(totalVal):
