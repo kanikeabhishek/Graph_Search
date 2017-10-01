@@ -269,8 +269,6 @@ def successors(people):
 # Retrieved from
 # https://stackoverflow.com/questions/16330649/python-looping-combinations-of-8-objects-into-3-groups-3-3-2
 # by jamylak
-
-
 def combination(seq, parts, indexes=None, res=[], cur=0):
     if indexes is None: # indexes to use for combinations
         indexes = range(len(seq))

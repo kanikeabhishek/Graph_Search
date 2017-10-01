@@ -31,7 +31,7 @@
 # (Inspired from website:https://heuristicswiki.wikispaces.com/Linear+Conflict)
 # For the regular 15-puzzle, linear conflicts is admissible. And for this question, the goal state can be achieved
 # at most 3 times faster than the regular one (if we can solve it by moving 3 tiles at a time, and it is the optimal
-# solution). However, for each conflict pair, we will still need at least 2 moves to put them in the same order.
+# solution). However, for each conflict pair, we will still need at least 2 moves to put them in the correct order.
 #
 # Cost function is f = (total moves to a state + heuristic of the state)
 #

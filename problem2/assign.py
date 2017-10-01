@@ -79,6 +79,8 @@ def getN(value, group1, myDict):
     teamList = []
     teamList = group1[value]['team']
     for each in temp:
+        if each ==value:
+            continue
         if each == '_':
             continue
         if each not in teamList:
@@ -97,6 +99,12 @@ def shouldAddOne(value, group1, myDict):
         return 0
     count = 0
     temp = []
+    # ABHI CHECK
+    if myDict[value]['rank'] == 0:
+        return 0
+    # ABHI CHECK
+    #print 'abhi addOne %s value %s' %(group1[value]['team'], value)
+    #print 'abhi addOne dict', myDict[value]['rank']
     temp = group1[value]['team']
     if len(temp) != myDict[value]['rank']:
         return 1
@@ -119,7 +127,6 @@ def update_cost(finalGroup):
     As the name suggests, the update_cost() function is used to update the cost after the students are grouped.
     It calculates the cost for each student and returns the values as a dictionary
     '''
-    temp = 0;
     totalVal = {}
     for each in finalGroup:
         temp = getM(each, finalGroup, myDict) + getN(each, finalGroup, myDict) + shouldAddOne(each, finalGroup, myDict)
@@ -181,9 +188,13 @@ for value in myDict:
     group1.update({value: {'rank': [], 'preferences': [], 'notWannaWork': [], 'team': []}})
     # Note that getK() is not being called here since we would be working on the basis of individuals.  getK() would be called later on,
     # when we have to determine the final cost
-    finalValue = shouldAddOne(value, group1, myDict) + getM(value, group1, myDict) + getN(value, group1, myDict)
+    finalValue = shouldAddOne(value, group1, myDict) + getM(value, group1, myDict) #+ getN(value, group1, myDict)
+    #print finalValue
+    #print shouldAddOne(value, group1, myDict), getM(value, group1, myDict) , getN(value, group1, myDict)
+    #print finalValue
     # updating the totalVal dictionary
-    totalVal.update({value: finalValue})
+    totalVal[value] =finalValue
+    #print totalVal
 #print group1
 #print finalValue
 
@@ -191,31 +202,36 @@ for value in myDict:
 threshold = 1
 finalGroup = group1
 Val = totalVal
+#print totalVal
 
 while True:
     val = getMax(Val)
     finalGroup = make_groups(finalGroup, Val)
-    print finalGroup
+    #print finalGroup
     Val = update_cost(finalGroup)
     currCost = get_currCost(Val)
     if currCost < threshold:
         break
     # increment the threshold by 10 on each iteration
     # by means of a threshold, we plan to set an upperbound on the time for which a program can run
-    threshold += 10
+    threshold += 300
 
 # using a loop to detect if students without a group (like Steflee in the given example) can be (forcibly!) added to a group
 # this makes sense since we assume that k>m>n, which means it would be costly to treat a student like Steflee as a team
 for each in finalGroup:
     if not finalGroup[each]['team']:
+        #print finalGroup[each]['team']
         for everyPreference in myDict[each]['preferences']:
+            #print everyPreference
             if everyPreference == '_':
                 continue
             if len(finalGroup[everyPreference]['team']) < 3:
+                print finalGroup[everyPreference]['team']
                 finalGroup[everyPreference]['team'].append(each)
                 finalGroup[each]['team'] = finalGroup[everyPreference]['team']
                 break
         for eachValue in finalGroup:
+            #print eachValue
             if each == eachValue:
                 continue
             if eachValue == '_':
@@ -235,7 +251,6 @@ for each in finalGroup:
         continue
     t = tuple(finalGroup[each]['team'])
     s.add(t)
-
 for each in s:
     print(" ".join(each))
 print(k * (len(s) + counter) + currCost)
