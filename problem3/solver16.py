@@ -1,4 +1,5 @@
-# !/usr/bin/env python
+#!/usr/bin/env python
+
 # put your 15 puzzle solver here!
 
 # In my understanding, the 15-puzzle question is an extended problem of 8-puzzle. However, in this case, we can move
