@@ -39,7 +39,7 @@
 # The algorithm #3 is used, and fringe is set as a priority queue. Given an initial state, and put it into fringe
 # in the form of (f, total moves so far, initial state)
 # While the fringe is not empty, get the element with highest priority(lowest cost), and check if it is goal.
-# If not put, it into CLOSED list. Then we generate successor states and if it is in CLOSED list, we will discard it.
+# If not, put it into CLOSED list. Then we generate successor states and if it is in CLOSED list, we will discard it.
 # Otherwise, the heuristic value and current move will be calculated. A dictionary use the successor as key, and parent
 # state as value. The dictionary update each time a state is generate, which means when the goal state is met,
 # the dictionary will contain the optimal path.) Last, we put the successor into fringe.
