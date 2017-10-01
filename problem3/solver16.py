@@ -74,19 +74,34 @@ def find_tile(puzzle,tile_num):
 #     return (count-1)/3
 
 # heuristic function
-def heuristic(puzzle):
-    sum = 0
-    tile_num_list = []
-    for num in range(1,16):
-        tile_num_list.append(find_tile(puzzle,num))
-        #print tile_num_list
-    for i in range(0,15):
-        #print tile_num_list[i]
-        for k in range(0,2):
-            #print tile_num_list[i][k]
-            #print goal_state_list[i][k]
-            sum = sum + abs(tile_num_list[i][k]-goal_state_list[i][k])
-    return sum/3
+# def heuristic(puzzle):
+#     sum = 0
+#     tile_num_list = []
+#     for num in range(1,16):
+#         tile_num_list.append(find_tile(puzzle,num))
+#         #print tile_num_list
+#     for i in range(0,15):
+#         #print tile_num_list[i]
+#         for k in range(0,2):
+#             #print tile_num_list[i][k]
+#             #print goal_state_list[i][k]
+#             sum = sum + abs(tile_num_list[i][k]-goal_state_list[i][k])
+#     return sum/3
+
+# def heuristic(puzzle):
+#     sum = 0
+#     tile_num_list = []
+#     for num in range(1,16):
+#         tile_num_list.append(find_tile(puzzle,num))
+#         #print tile_num_list
+#     for i in range(0,15):
+#         #print tile_num_list[i]
+#         for k in range(0,2):
+#             #print tile_num_list[i][k]
+#             #print goal_state_list[i][k]
+#             if tile_num_list[i][k] != goal_state_list[i][k] :
+#                 sum +=1
+#     return sum/3
 
 
 def heuristic(puzzle):
@@ -96,8 +111,8 @@ def heuristic(puzzle):
         tile_num_list.append(find_tile(puzzle,num))
         #print tile_num_list
     for i in range(0,15):
-        If tile_num_list[i][0] != goal_state_list[i][0]) and tile_num_list[i][1] != goal_state_list[i][1]):
-        sum += 1
+        if tile_num_list[i][0] != goal_state_list[i][0] and tile_num_list[i][1] != goal_state_list[i][1]:
+            sum += 1
     return sum
     
 
@@ -119,17 +134,18 @@ def find_empty(puzzle):
 # return a state after move 1, 2 or 3 tiles in 1 of the 4 directions
 def move(puzzle, direction, size):
     zero = find_empty(puzzle)
+    puzzle_temp = copy.deepcopy(puzzle)
     if direction == 'L':
         if size == 1:
 
-            puzzle_temp = copy.deepcopy(puzzle)
+
             puzzle_temp[zero[0]][zero[1]] = puzzle_temp[zero[0]][zero[1]+1]
             puzzle_temp[zero[0]][zero[1]+1] = 0
             return puzzle_temp
             #zero = [zero[0],zero[1]+1]
         elif size == 2:
 
-            puzzle_temp = copy.deepcopy(puzzle)
+            #puzzle_temp = copy.deepcopy(puzzle)
             puzzle_temp[zero[0]][zero[1]] = puzzle_temp[zero[0]][zero[1]+1]
             puzzle_temp[zero[0]][zero[1]+1] = puzzle_temp[zero[0]][zero[1]+2]
             puzzle_temp[zero[0]][zero[1]+2] = 0
@@ -137,7 +153,7 @@ def move(puzzle, direction, size):
             return puzzle_temp
 
         elif size == 3:
-            puzzle_temp = copy.deepcopy(puzzle)
+            #puzzle_temp = copy.deepcopy(puzzle)
             puzzle_temp[zero[0]][zero[1]] = puzzle_temp[zero[0]][zero[1]+1]
             puzzle_temp[zero[0]][zero[1]+1] = puzzle_temp[zero[0]][zero[1]+2]
             puzzle_temp[zero[0]][zero[1]+2] = puzzle_temp[zero[0]][zero[1]+3]
@@ -148,13 +164,13 @@ def move(puzzle, direction, size):
     elif direction == 'R':
 
         if size == 1:
-            puzzle_temp = copy.deepcopy(puzzle)
+            #puzzle_temp = copy.deepcopy(puzzle)
             puzzle_temp[zero[0]][zero[1]] = puzzle_temp[zero[0]][zero[1]-1]
             puzzle_temp[zero[0]][zero[1]-1] = 0
             #zero = [zero[0],zero[1]-1]
             return puzzle_temp
         elif size == 2:
-            puzzle_temp = copy.deepcopy(puzzle)
+            #puzzle_temp = copy.deepcopy(puzzle)
             puzzle_temp[zero[0]][zero[1]] = puzzle_temp[zero[0]][zero[1]-1]
             puzzle_temp[zero[0]][zero[1]-1] = puzzle_temp[zero[0]][zero[1]-2]
             puzzle_temp[zero[0]][zero[1]-2] = 0
@@ -162,7 +178,7 @@ def move(puzzle, direction, size):
             return puzzle_temp
 
         elif size == 3:
-            puzzle_temp = copy.deepcopy(puzzle)
+            #puzzle_temp = copy.deepcopy(puzzle)
             puzzle_temp[zero[0]][zero[1]] = puzzle_temp[zero[0]][zero[1]-1]
             puzzle_temp[zero[0]][zero[1]-1] = puzzle_temp[zero[0]][zero[1]-2]
             puzzle_temp[zero[0]][zero[1]-2] = puzzle_temp[zero[0]][zero[1]-3]
@@ -172,14 +188,14 @@ def move(puzzle, direction, size):
 
     elif direction == 'U':
         if size == 1:
-            puzzle_temp = copy.deepcopy(puzzle)
+            #puzzle_temp = copy.deepcopy(puzzle)
             puzzle_temp[zero[0]][zero[1]] = puzzle_temp[zero[0]+1][zero[1]]
             puzzle_temp[zero[0]+1][zero[1]] = 0
             #zero = [zero[0]+1,zero[1]]
             return puzzle_temp
 
         elif size == 2:
-            puzzle_temp = copy.deepcopy(puzzle)
+            #puzzle_temp = copy.deepcopy(puzzle)
             puzzle_temp[zero[0]][zero[1]] = puzzle_temp[zero[0]+1][zero[1]]
             puzzle_temp[zero[0]+1][zero[1]] = puzzle_temp[zero[0]+2][zero[1]]
             puzzle_temp[zero[0]+2][zero[1]] = 0
@@ -187,7 +203,7 @@ def move(puzzle, direction, size):
             return puzzle_temp
 
         elif size == 3:
-            puzzle_temp = copy.deepcopy(puzzle)
+            #puzzle_temp = copy.deepcopy(puzzle)
             puzzle_temp[zero[0]][zero[1]] = puzzle_temp[zero[0]+1][zero[1]]
             puzzle_temp[zero[0]+1][zero[1]] = puzzle_temp[zero[0]+2][zero[1]]
             puzzle_temp[zero[0]+2][zero[1]] = puzzle_temp[zero[0]+3][zero[1]]
@@ -197,14 +213,14 @@ def move(puzzle, direction, size):
 
     elif direction == 'D':
         if size == 1:
-            puzzle_temp = copy.deepcopy(puzzle)
+            #puzzle_temp = copy.deepcopy(puzzle)
             puzzle_temp[zero[0]][zero[1]] = puzzle_temp[zero[0]-1][zero[1]]
             puzzle_temp[zero[0]-1][zero[1]] = 0
             #zero = [zero[0]-1,zero[1]]
             return puzzle_temp
 
         elif size == 2:
-            puzzle_temp = copy.deepcopy(puzzle)
+            #puzzle_temp = copy.deepcopy(puzzle)
             puzzle_temp[zero[0]][zero[1]] = puzzle_temp[zero[0]-1][zero[1]]
             puzzle_temp[zero[0]-1][zero[1]] = puzzle_temp[zero[0]-2][zero[1]]
             puzzle_temp[zero[0]-2][zero[1]] = 0
@@ -212,7 +228,7 @@ def move(puzzle, direction, size):
             return puzzle_temp
 
         elif size == 3:
-            puzzle_temp = copy.deepcopy(puzzle)
+            #puzzle_temp = copy.deepcopy(puzzle)
             puzzle_temp[zero[0]][zero[1]] = puzzle_temp[zero[0]-1][zero[1]]
             puzzle_temp[zero[0]-1][zero[1]] = puzzle_temp[zero[0]-2][zero[1]]
             puzzle_temp[zero[0]-2][zero[1]] = puzzle_temp[zero[0]-3][zero[1]]
@@ -268,19 +284,23 @@ def solve(puzzle):
     while not fringe.empty():
         f, g_old, state = fringe.get()
 
-        #print f, g_old,state
+        print f, g_old,state
         #path_dict[g_old] = state
 
         if is_goal(state):
             #print path
             return path
-        closed.append(state)
+        else:
+            closed.append(state)
         for s in successors(state):
             if s in closed:
                 continue
             h = heuristic(s)
             g = g_old+1
-            if str(s) not in path.keys():
+            # if str(s) not in path.keys():
+            #     path[str(s)] = state
+            object = path.get(str(s))
+            if not object:
                 path[str(s)] = state
             fringe.put((g + h, g, s))
 
@@ -330,7 +350,7 @@ def main():
     initial_puzzle = read_puzzle(file_directory)
     #puzzle_num = random.sample(/Users/Joshua/Documents/CSCI B551/Assignment 1/github/ahnaik-abkanike-cw234-a1/problem3range(16), 16)
     #initial_puzzle = [puzzle_num[i:i + 4] for i in xrange(0, len(puzzle_num), 4)]
-    puzzle_copy = copy.deepcopy(initial_puzzle)
+    #puzzle_copy = copy.deepcopy(initial_puzzle)
 
 
     global goal_state
@@ -340,8 +360,8 @@ def main():
                        (3, 0), (3, 1), (3, 2)]
     #print get_path(solve(puzzle_copy))
     #print get_path(solve(puzzle_copy), initial_puzzle, goal_state)
-    print print_path(get_path(solve(puzzle_copy),initial_puzzle,goal_state))
-    #print heuristic(initial_puzzle)
+    print print_path(get_path(solve(initial_puzzle),initial_puzzle,goal_state))
+    print heuristic(initial_puzzle)
 
 if __name__ == '__main__':
     main()
