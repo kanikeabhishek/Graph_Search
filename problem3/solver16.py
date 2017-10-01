@@ -34,13 +34,16 @@
 # Cost function is f = (total moves to a state + heuristic of the state)
 #
 # How this program works?
-# The algorithm #2 is used, and fringe is set as priority queue. Given an initial state, and put it into fringe
+# The algorithm #2 is used, and fringe is set as a priority queue. Given an initial state, and put it into fringe
 # in the form of (f, total moves so far, initial state)
-# While the fringe is not empty, get the element with highest priority(lowest cost), and update it into a dictionary.
-# (The dictionary update each time a state is taken from fringe, which means when the goal state is met, the dictionary
-# will have the optimal path.) Then, check if it is goal. If not put it into CLOSED list.
-# Then find its successors and if the successor state is in CLOSED, then we discard it. Otherwise, calculate costs, then put into fringe.
-# After finding the optimal solution, we use the dictionary we had in solve process to generate outputs.
+# While the fringe is not empty, get the element with highest priority(lowest cost), and check if it is goal.
+# If not put, it into CLOSED list. Then we generate successor states and if it is in CLOSED list, we will discard it.
+# Otherwise, the heuristic value and current move will be calculated. A dictionary use the successor as key, and parent
+# state as value. The dictionary update each time a state is generate, which means when the goal state is met,
+# the dictionary will contain the optimal path.) Last, we put the successor into fringe.
+#
+# After finding the goal, we use the dictionary to back tracking from goal state to initial state, and then
+# generate outputs.
 
 
 
@@ -165,102 +168,96 @@ def move(puzzle, direction, size):
     if direction == 'L':
         if size == 1:
 
-
             puzzle_temp[zero[0]][zero[1]] = puzzle_temp[zero[0]][zero[1]+1]
             puzzle_temp[zero[0]][zero[1]+1] = 0
             return puzzle_temp
-            #zero = [zero[0],zero[1]+1]
-        elif size == 2:
 
-            #puzzle_temp = copy.deepcopy(puzzle)
+        elif size == 2:
             puzzle_temp[zero[0]][zero[1]] = puzzle_temp[zero[0]][zero[1]+1]
             puzzle_temp[zero[0]][zero[1]+1] = puzzle_temp[zero[0]][zero[1]+2]
             puzzle_temp[zero[0]][zero[1]+2] = 0
-            #zero = [zero[0], zero[1] + 2]
             return puzzle_temp
 
         elif size == 3:
-            #puzzle_temp = copy.deepcopy(puzzle)
+
             puzzle_temp[zero[0]][zero[1]] = puzzle_temp[zero[0]][zero[1]+1]
             puzzle_temp[zero[0]][zero[1]+1] = puzzle_temp[zero[0]][zero[1]+2]
             puzzle_temp[zero[0]][zero[1]+2] = puzzle_temp[zero[0]][zero[1]+3]
             puzzle_temp[zero[0]][zero[1]+3] = 0
-            #zero = [zero[0], zero[1] + 3]
             return puzzle_temp
 
     elif direction == 'R':
 
         if size == 1:
-            #puzzle_temp = copy.deepcopy(puzzle)
+
             puzzle_temp[zero[0]][zero[1]] = puzzle_temp[zero[0]][zero[1]-1]
             puzzle_temp[zero[0]][zero[1]-1] = 0
-            #zero = [zero[0],zero[1]-1]
             return puzzle_temp
         elif size == 2:
-            #puzzle_temp = copy.deepcopy(puzzle)
+
             puzzle_temp[zero[0]][zero[1]] = puzzle_temp[zero[0]][zero[1]-1]
             puzzle_temp[zero[0]][zero[1]-1] = puzzle_temp[zero[0]][zero[1]-2]
             puzzle_temp[zero[0]][zero[1]-2] = 0
-            #zero = [zero[0], zero[1] - 2]
+
             return puzzle_temp
 
         elif size == 3:
-            #puzzle_temp = copy.deepcopy(puzzle)
+
             puzzle_temp[zero[0]][zero[1]] = puzzle_temp[zero[0]][zero[1]-1]
             puzzle_temp[zero[0]][zero[1]-1] = puzzle_temp[zero[0]][zero[1]-2]
             puzzle_temp[zero[0]][zero[1]-2] = puzzle_temp[zero[0]][zero[1]-3]
             puzzle_temp[zero[0]][zero[1]-3] = 0
-            #zero = [zero[0], zero[1] - 3]
+
             return puzzle_temp
 
     elif direction == 'U':
         if size == 1:
-            #puzzle_temp = copy.deepcopy(puzzle)
+
             puzzle_temp[zero[0]][zero[1]] = puzzle_temp[zero[0]+1][zero[1]]
             puzzle_temp[zero[0]+1][zero[1]] = 0
-            #zero = [zero[0]+1,zero[1]]
+
             return puzzle_temp
 
         elif size == 2:
-            #puzzle_temp = copy.deepcopy(puzzle)
+
             puzzle_temp[zero[0]][zero[1]] = puzzle_temp[zero[0]+1][zero[1]]
             puzzle_temp[zero[0]+1][zero[1]] = puzzle_temp[zero[0]+2][zero[1]]
             puzzle_temp[zero[0]+2][zero[1]] = 0
-            #zero = [zero[0]+ 2, zero[1]]
+
             return puzzle_temp
 
         elif size == 3:
-            #puzzle_temp = copy.deepcopy(puzzle)
+
             puzzle_temp[zero[0]][zero[1]] = puzzle_temp[zero[0]+1][zero[1]]
             puzzle_temp[zero[0]+1][zero[1]] = puzzle_temp[zero[0]+2][zero[1]]
             puzzle_temp[zero[0]+2][zero[1]] = puzzle_temp[zero[0]+3][zero[1]]
             puzzle_temp[zero[0]+3][zero[1]] = 0
-            #zero = [zero[0]+3, zero[1]]
+
             return puzzle_temp
 
     elif direction == 'D':
         if size == 1:
-            #puzzle_temp = copy.deepcopy(puzzle)
+
             puzzle_temp[zero[0]][zero[1]] = puzzle_temp[zero[0]-1][zero[1]]
             puzzle_temp[zero[0]-1][zero[1]] = 0
-            #zero = [zero[0]-1,zero[1]]
+
             return puzzle_temp
 
         elif size == 2:
-            #puzzle_temp = copy.deepcopy(puzzle)
+
             puzzle_temp[zero[0]][zero[1]] = puzzle_temp[zero[0]-1][zero[1]]
             puzzle_temp[zero[0]-1][zero[1]] = puzzle_temp[zero[0]-2][zero[1]]
             puzzle_temp[zero[0]-2][zero[1]] = 0
-            #zero = [zero[0]-2, zero[1]]
+
             return puzzle_temp
 
         elif size == 3:
-            #puzzle_temp = copy.deepcopy(puzzle)
+
             puzzle_temp[zero[0]][zero[1]] = puzzle_temp[zero[0]-1][zero[1]]
             puzzle_temp[zero[0]-1][zero[1]] = puzzle_temp[zero[0]-2][zero[1]]
             puzzle_temp[zero[0]-2][zero[1]] = puzzle_temp[zero[0]-3][zero[1]]
             puzzle_temp[zero[0]-3][zero[1]] = 0
-            #zero = [zero[0]-3, zero[1]]
+
             return puzzle_temp
 
 
@@ -315,7 +312,6 @@ def solve(puzzle):
         #path_dict[g_old] = state
 
         if is_goal(state):
-            #print path
             return path
         else:
             closed.append(state)
