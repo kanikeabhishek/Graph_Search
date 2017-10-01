@@ -74,19 +74,44 @@ def find_tile(puzzle,tile_num):
 #     return (count-1)/3
 
 # heuristic function
+# def heuristic(puzzle):
+#     sum = 0
+#     tile_num_list = []
+#     for num in range(1,16):
+#         tile_num_list.append(find_tile(puzzle,num))
+#         #print tile_num_list
+#     for i in range(0,15):
+#         #print tile_num_list[i]
+#         for k in range(0,2):
+#             #print tile_num_list[i][k]
+#             #print goal_state_list[i][k]
+#             sum = sum + abs(tile_num_list[i][k]-goal_state_list[i][k])
+#     return sum/3
+
 def heuristic(puzzle):
-    sum = 0
-    tile_num_list = []
-    for num in range(1,16):
-        tile_num_list.append(find_tile(puzzle,num))
-        #print tile_num_list
-    for i in range(0,15):
-        #print tile_num_list[i]
-        for k in range(0,2):
-            #print tile_num_list[i][k]
-            #print goal_state_list[i][k]
-            sum = sum + abs(tile_num_list[i][k]-goal_state_list[i][k])
-    return sum/3
+    count = 0
+    for i in range(0,4):
+        for j in range(0,4):
+            temp = puzzle[i][j]
+            try:
+                if temp > puzzle[i][j+1]:
+                    if puzzle[i][j+1] == 0:
+                        continue
+                    count += 2
+            except IndexError:
+                continue
+    for i in range(0,4):
+        for j in range(0,4):
+            temp = puzzle[j][i]
+
+            try:
+                if temp > puzzle[j+1][i]:
+                    if puzzle[j+1][i] == 0:
+                        continue
+                    count += 2
+            except IndexError:
+                continue
+    return count
 
 # def heuristic(puzzle):
 #     sum = 0
@@ -285,7 +310,7 @@ def solve(puzzle):
     while not fringe.empty():
         f, g_old, state = fringe.get()
 
-        #print f, g_old,state
+        print f, g_old,state
         #path_dict[g_old] = state
 
         if is_goal(state):
@@ -363,7 +388,7 @@ def main():
     #print get_path(solve(puzzle_copy))
     #print get_path(solve(puzzle_copy), initial_puzzle, goal_state)
     print print_path(get_path(solve(initial_puzzle),initial_puzzle,goal_state))
-    #print heuristic(initial_puzzle)
+    print heuristic(initial_puzzle)
 
 if __name__ == '__main__':
     main()
