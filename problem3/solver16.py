@@ -283,7 +283,7 @@ def read_puzzle(file_directory):
 # successor function
 def successors(puzzle):
     state = []
-    direction = ['L','R','U','D']
+    direction = ['L','R','U','D'] # try 4 directions
     for d in direction:
         zero = find_empty(puzzle)  # find blank space
         puzzle_copy = copy.deepcopy(puzzle)
@@ -302,7 +302,7 @@ def successors(puzzle):
     return state
 
 
-# BFS
+# Solve the puzzle using algorithm #3
 def solve(puzzle):
     #path_dict={}
     closed = []
@@ -329,6 +329,7 @@ def solve(puzzle):
             astate = path.get(str(s))
             if not astate:
                 path[str(s)] = state
+
             fringe.put((g + h, g, s))
 
         # print fringe
