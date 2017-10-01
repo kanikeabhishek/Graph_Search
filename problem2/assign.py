@@ -131,6 +131,14 @@ def make_groups(group1, totalVal):
     and tries to allocate groups as per his preference.  It also ensures that the same student is not added twice in a group.
     '''
     student = max(totalVal, key=totalVal.get)
+    tmp_student = totalVal
+    foundMax = False
+    while not foundMax:
+        if myDict[student]['preferences'][0] == '_':
+            s = tmp_student.pop(student)
+            student = max(tmp_student, key=totalVal.get)
+        else:
+            foundMax = True
     templist = []
     templist.append(student)
     # add each student in djcran's preference to his team
@@ -187,6 +195,8 @@ for each in finalGroup:
                 finalGroup[each]['team'] = finalGroup[everyPreference]['team']
                 break
         for eachValue in finalGroup:
+            if each == eachValue:
+                continue
             if eachValue == '_':
                 continue
             if not finalGroup[each]['team'] and len(finalGroup[eachValue]['team']) < 3:
