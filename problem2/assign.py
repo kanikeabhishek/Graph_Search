@@ -1,3 +1,24 @@
+#!/usr/bin/env python
+'''
+To solve this question, we envisaged the problem to be related to n-queens.  Just like in n-queens, we first try to meet one of the constraints (the heavier ones), then the next and so on.  Also, we assume throughout that k>m>n. The problem formulation is as below:
+
+Initial state:  We consider each student to be a single group.  Thus, if there are n students, then there are n groups.
+State space:  The state space would be the combination of all the students to form a team in various ways, such that the team size is not more than 3.
+Successor function:  We consider the student with the highest cost and try to pair him with his preferences.  So, at any instant, the student being worked upon is the one who has the maximum cost.  
+Edge weights: Each group costs k minutes, each student takes a single minute if he is allocated a team size that he didn't prefer, `n` minutes per person if assigned to someone they didn't request and `m` minutes per person if assigned to someone they do not want to work with. 
+Goal state: A set of groups of students such that their total cost would be lesser than that of the threshold. 
+
+Working of the search algorithm:
+    The algorithm initially treats each student to be an individual group.  Thus, if there are `n` students, then there are `n` groups.  Next, it finds out the student(s) with the maximum cost and tries to form groups as per his preferences.  While doing this, it does not bother if other students want to (or do not want to) work with this student because we assume that k>m>n.  Once this group has been formed, it calculates the total cost.  If this total cost is less than the threshold (initially set equal to 1), then it simply exits; if not then it increments the threshold by some pre-defined value (say 10) and then again calculates the cost for each student.  Note that the value of `k` is not used in this case (and it is used later on after forming the final groups).  Once the costs for each student have been found, it again selects the highest student and starts forming groups as per his preference.  Then it again calculates the total cost to find if it is less than the threshold, if yes then exits; if not then increments the threshold and iterates.  It finally exits the iteration when the total cost it found is lower than the threshold in that case.
+
+    Once the loop is exited, it finds to see if there exists any student (like Steflee) who has not been paired up with.  If yes, then it pairs such a student with some other group (provided the group size<=2).  It then finally calculates the total cost (also taking into account `k` this time).  The groups thus formed are displayed alongwith the total cost.
+
+    This approach works and generates the lowest possible cost because we increment the threshold in each iteration.  Thus, the threshold acts as an upper limit to the minimum cost that it needs to find.  It uses a hardThreshold set to a very high value to ensure that the search does not run to infinity.  
+
+Assumptions and challenges faced:
+    We assume that k>m>n.  Thus, throughout the code, we try to maximize the number of groups and to pair up the students with their preferences.  The main challenge we faced was trying to determine a goal state (since the program could literally find a max value every time and keep iterating).  It is then that we decided to come up with the threshold factor to ensure that we have an upper bound on the minimum cost that is found.  Besides this, we also have a hardThreshold set to a very high value to ensure that the search doesn't run to infinity.  We also initially thought about the brute force approach of pair students in all possible ways, but quickly determined that it would be very expensive and might not run even for relatively small number of students.  There after we envisaged it to be similar to n-queens problem and employed a similar thought process for solving it.
+'''
+
 import sys
 import copy as cp
 # get the parameters from the command line
@@ -79,8 +100,6 @@ def getN(value, group1, myDict):
     teamList = []
     teamList = group1[value]['team']
     for each in temp:
-        if each ==value:
-            continue
         if each == '_':
             continue
         if each not in teamList:
@@ -99,12 +118,6 @@ def shouldAddOne(value, group1, myDict):
         return 0
     count = 0
     temp = []
-    # ABHI CHECK
-    if myDict[value]['rank'] == 0:
-        return 0
-    # ABHI CHECK
-    #print 'abhi addOne %s value %s' %(group1[value]['team'], value)
-    #print 'abhi addOne dict', myDict[value]['rank']
     temp = group1[value]['team']
     if len(temp) != myDict[value]['rank']:
         return 1
@@ -127,6 +140,7 @@ def update_cost(finalGroup):
     As the name suggests, the update_cost() function is used to update the cost after the students are grouped.
     It calculates the cost for each student and returns the values as a dictionary
     '''
+    temp = 0;
     totalVal = {}
     for each in finalGroup:
         temp = getM(each, finalGroup, myDict) + getN(each, finalGroup, myDict) + shouldAddOne(each, finalGroup, myDict)
@@ -181,61 +195,57 @@ def make_groups(group1, totalVal):
         group1[each]['team'] = templist
     return group1
 
-
 group1 = {}
 for value in myDict:
     # To start with, we treat each student as a single group.  This is our initial state
     group1.update({value: {'rank': [], 'preferences': [], 'notWannaWork': [], 'team': []}})
     # Note that getK() is not being called here since we would be working on the basis of individuals.  getK() would be called later on,
     # when we have to determine the final cost
-    finalValue = shouldAddOne(value, group1, myDict) + getM(value, group1, myDict) #+ getN(value, group1, myDict)
-    #print finalValue
-    #print shouldAddOne(value, group1, myDict), getM(value, group1, myDict) , getN(value, group1, myDict)
-    #print finalValue
+    finalValue = shouldAddOne(value, group1, myDict) + getM(value, group1, myDict) + getN(value, group1, myDict)
     # updating the totalVal dictionary
-    totalVal[value] =finalValue
-    #print totalVal
+    totalVal.update({value: finalValue})
 #print group1
 #print finalValue
 
 # setting the initial threshold as `1`
 threshold = 1
+hardThreshold = 9999999999
 finalGroup = group1
 Val = totalVal
-#print totalVal
 
 while True:
     val = getMax(Val)
     finalGroup = make_groups(finalGroup, Val)
-    #print finalGroup
+    #print (finalGroup)
     Val = update_cost(finalGroup)
     currCost = get_currCost(Val)
     if currCost < threshold:
         break
     # increment the threshold by 10 on each iteration
     # by means of a threshold, we plan to set an upperbound on the time for which a program can run
-    threshold += 300
+    threshold += 10
+    # just to ensure that the program doesn't run to infinity!
+    if threshold>hardThreshold:
+        break
 
 # using a loop to detect if students without a group (like Steflee in the given example) can be (forcibly!) added to a group
-# this makes sense since we assume that k>m>n, which means it would be costly to treat a student like Steflee as a team
+# this makes sense since we assume that k>m>n, which means it would be costly to treat a single student like Steflee as a team
 for each in finalGroup:
-    if not finalGroup[each]['team']:
-        #print finalGroup[each]['team']
+    if not finalGroup[each]['team'] or (len(finalGroup[each]['team'])==1 and finalGroup[each]['team'][0]==each):
         for everyPreference in myDict[each]['preferences']:
-            #print everyPreference
             if everyPreference == '_':
                 continue
+            #check if the team size of any student he wants to work with<3.  If yes, then assign him to it.
             if len(finalGroup[everyPreference]['team']) < 3:
-                print finalGroup[everyPreference]['team']
                 finalGroup[everyPreference]['team'].append(each)
                 finalGroup[each]['team'] = finalGroup[everyPreference]['team']
                 break
         for eachValue in finalGroup:
-            #print eachValue
             if each == eachValue:
                 continue
             if eachValue == '_':
                 continue
+            #check if any of the groups have a size<3, if yes, then simply assign him to it.
             if not finalGroup[each]['team'] and len(finalGroup[eachValue]['team']) < 3:
                 finalGroup[eachValue]['team'].append(each)
                 finalGroup[each]['team'] = finalGroup[eachValue]['team']
@@ -243,14 +253,22 @@ for each in finalGroup:
 Val = update_cost(finalGroup)
 currCost = get_currCost(Val)
 
+# use a set to store each of the teams formed.
+# using a set will ensure uniqueness
+# using a counter to count the number of students without any teams (ideally it should be just 1 because if there is more than 1, then they can be paired)
 s = set()
 counter = 0
 for each in finalGroup:
+    # check if his team is empty
     if not finalGroup[each]['team']:
         counter += 1
         continue
+    # store each group in the set as a tuple
     t = tuple(finalGroup[each]['team'])
     s.add(t)
+
+# print each group followed by the total cost
+# note that we are using `k` here to print the total cost based on the number of groups
 for each in s:
     print(" ".join(each))
 print(k * (len(s) + counter) + currCost)
