@@ -260,12 +260,18 @@ def successors(people):
     if mod:
         parts_list.append(mod)
 
-    for c in F(people, parts=parts_list):
+    for c in combination(people, parts=parts_list):
         state.append(c)
     return state
 
+# generate all possible combination given group number
+# Python looping combinations of 8 objects into 3 groups, 3-3-2
+# Retrieved from
+# https://stackoverflow.com/questions/16330649/python-looping-combinations-of-8-objects-into-3-groups-3-3-2
+# by jamylak
 
-def F(seq, parts, indexes=None, res=[], cur=0):
+
+def combination(seq, parts, indexes=None, res=[], cur=0):
     if indexes is None: # indexes to use for combinations
         indexes = range(len(seq))
 
@@ -276,7 +282,7 @@ def F(seq, parts, indexes=None, res=[], cur=0):
     for x in it.combinations(indexes, r=parts[cur]):
         set_x = set(x)
         new_indexes = [i for i in indexes if i not in set_x]
-        for comb in F(seq, parts, new_indexes, res=res + [x], cur=cur + 1):
+        for comb in combination(seq, parts, new_indexes, res=res + [x], cur=cur + 1):
             yield comb
 
 total_group=successors(people)
