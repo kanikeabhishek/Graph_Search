@@ -1,8 +1,9 @@
+# !/usr/bin/env python
 # put your 15 puzzle solver here!
 
 # In my understanding, the 15-puzzle question is an extended problem of 8-puzzle. However, in this case, we can move
 # 1, 2 or 3 tiles each time with uniform cost.
-# One important character of this problem is the initial state could be unsolvable when permutation is odd
+# One important character of this problem is the initial state could be unsolvable when permutation inversion is odd
 #
 # The program reads the initial state from a file, then parse it in to a list of lists.
 # Eg. [[1, 2, 4, 3], [5, 6, 7, 8], [9, 10, 11, 12], [0, 13, 14, 15]]
@@ -34,7 +35,7 @@
 # Cost function is f = (total moves to a state + heuristic of the state)
 #
 # How this program works?
-# The algorithm #2 is used, and fringe is set as a priority queue. Given an initial state, and put it into fringe
+# The algorithm #3 is used, and fringe is set as a priority queue. Given an initial state, and put it into fringe
 # in the form of (f, total moves so far, initial state)
 # While the fringe is not empty, get the element with highest priority(lowest cost), and check if it is goal.
 # If not put, it into CLOSED list. Then we generate successor states and if it is in CLOSED list, we will discard it.
@@ -56,6 +57,19 @@
 from Queue import PriorityQueue
 import copy
 import sys
+
+def permutation_inversion_check(puzzle):
+    count = 0
+    puzzle_list = []
+    for i in puzzle:
+        puzzle_list += i
+    for num in range(16):
+        for num1 in range(num,16):
+            if puzzle_list[num]==0 or puzzle_list[num1] ==0:
+                continue
+            if puzzle_list[num] > puzzle_list[num1]:
+                count += 1
+    return count
 
 
 def find_tile(puzzle,tile_num):
@@ -359,7 +373,10 @@ def main():
     global initial_puzzle
     initial_puzzle = read_puzzle(file_directory)
 
+    if permutation_inversion_check(initial_puzzle) % 2 == 1:
+        print "Your puzzle is unsolvable"
 
+        quit()
 
     global goal_state
     global goal_state_list
@@ -374,3 +391,4 @@ def main():
 if __name__ == '__main__':
     main()
 
+permutation_inversion_check(initial_puzzle)
