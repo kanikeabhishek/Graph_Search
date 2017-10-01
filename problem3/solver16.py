@@ -24,11 +24,12 @@
 # number of tiles.
 # Wherever the blank space is, there are always 6 possible states
 #
-# The heuristic function is the manhattan distance to the goal state divide by 3. For the regular 15-puzzle,
-# manhattan distance is admissible. And for this question, the goal state can be achieved at most
-# 3 times faster than the regular one (if we can solve it by moving 3 tiles at a time, and it is the optimal solution).
-# Therefore, when it divide by 3, the heuristic value are always less or equal than the minimal moves to goal state.
-# Since the division creates decimal points, division module is imported.
+# The heuristic function is the linear conflicts of each vertical and horizontal line. For each tile X, if a tile
+# in the same line behind X, is smaller than X, we will add 2.
+# (Inspired from website:https://heuristicswiki.wikispaces.com/Linear+Conflict)
+# For the regular 15-puzzle, linear conflicts is admissible. And for this question, the goal state can be achieved
+# at most 3 times faster than the regular one (if we can solve it by moving 3 tiles at a time, and it is the optimal
+# solution). However, for each conflict pair, we will still need at least 2 moves to put them in the same order.
 #
 # Cost function is f = (total moves to a state + heuristic of the state)
 #
@@ -43,7 +44,7 @@
 
 
 
-from __future__ import division
+#from __future__ import division
 import random
 from Queue import PriorityQueue
 import copy
@@ -388,7 +389,7 @@ def main():
     #print get_path(solve(puzzle_copy))
     #print get_path(solve(puzzle_copy), initial_puzzle, goal_state)
     print print_path(get_path(solve(initial_puzzle),initial_puzzle,goal_state))
-    print heuristic(initial_puzzle)
+    #print heuristic(initial_puzzle)
 
 if __name__ == '__main__':
     main()
