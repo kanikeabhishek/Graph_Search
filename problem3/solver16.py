@@ -310,7 +310,7 @@ def solve(puzzle):
     while not fringe.empty():
         f, g_old, state = fringe.get()
 
-        print f, g_old,state
+        #print f, g_old,state
         #path_dict[g_old] = state
 
         if is_goal(state):
