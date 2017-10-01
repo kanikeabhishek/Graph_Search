@@ -29,7 +29,7 @@ for element in data:
     # print element[2]
     element[3] = [items for items in element[3].split(',')]
     myDict.update({element[0]: {'rank': int(element[1]), 'preferences': element[2], 'notWannaWork': element[3]}})
-
+#print myDict
 
 
 def getMax(totalVal):
@@ -155,6 +155,8 @@ for value in myDict:
     finalValue = shouldAddOne(value, group1, myDict) + getM(value, group1, myDict) + getN(value, group1, myDict)
     # updating the totalVal dictionary
     totalVal.update({value: finalValue})
+#print group1
+#print finalValue
 
 # setting the initial threshold as `1`
 threshold = 1
@@ -164,6 +166,7 @@ Val = totalVal
 while True:
     val = getMax(Val)
     finalGroup = make_groups(finalGroup, Val)
+    print finalGroup
     Val = update_cost(finalGroup)
     currCost = get_currCost(Val)
     if currCost < threshold:

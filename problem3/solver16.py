@@ -49,7 +49,8 @@
 # 'manhattan distance' to be admissible, we divide them by 3 (since we know it reaches goal state at most 3 times
 # faster than regular 15-puzzle). However, both of them runs slow for complicated case(moves > 10). Then we tried
 # number of tiles not in the goal row and column, and got almost same runtime. Then the linear conflicts was implemented
-# and significantly improved the runtime.
+# and significantly improved the runtime. As far as I tested, the program should solve puzzle <= 20 moves,
+# within 1 minutes.
 
 
 from Queue import PriorityQueue
