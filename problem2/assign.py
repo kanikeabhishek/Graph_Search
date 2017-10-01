@@ -93,6 +93,8 @@ def shouldAddOne(value, group1, myDict):
     then add 1 (since he will spend 1 minute only)
     Return 1 or 0
     '''
+    if myDict[value]['rank'] == 0:
+        return 0
     count = 0
     temp = []
     temp = group1[value]['team']
@@ -222,6 +224,8 @@ for each in finalGroup:
                 finalGroup[eachValue]['team'].append(each)
                 finalGroup[each]['team'] = finalGroup[eachValue]['team']
                 break
+Val = update_cost(finalGroup)
+currCost = get_currCost(Val)
 
 s = set()
 counter = 0
