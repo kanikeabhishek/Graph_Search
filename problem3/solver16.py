@@ -3,8 +3,8 @@
 
 # In my understanding, the 15-puzzle question is an extended problem of 8-puzzle. However, in this case, we can move
 # 1, 2 or 3 tiles each time with uniform cost.
-# One important character of this problem is the initial state could be unsolvable when permutation inversion is odd
-# This program check if permutation inversion is an odd number, and raise an error.
+# One important character of this problem is the initial state could be unsolvable when permutation inversion is odd.
+# This program checks it, and raise an error. (currently commented out)
 
 # The program reads the initial state from a file, then parse it in to a list of lists.
 # Eg. [[1, 2, 4, 3], [5, 6, 7, 8], [9, 10, 11, 12], [0, 13, 14, 15]]
@@ -59,18 +59,23 @@ from Queue import PriorityQueue
 import copy
 import sys
 
-def permutation_inversion_check(puzzle):
-    count = 0
-    puzzle_list = []
-    for i in puzzle:
-        puzzle_list += i
-    for num in range(16):
-        for num1 in range(num,16):
-            if puzzle_list[num]==0 or puzzle_list[num1] ==0:
-                continue
-            if puzzle_list[num] > puzzle_list[num1]:
-                count += 1
-    return count
+# solvability check
+# if count and row number of blank space(index starts from 0)
+# are both even or odd, the puzzle is unsolvable
+# def solvable_check(puzzle):
+#     count = 0
+#     puzzle_list = []
+#     for i in puzzle:
+#         puzzle_list += i
+#     for num in range(16):
+#         for num1 in range(num,16):
+#
+#             if puzzle_list[num] == 0 or puzzle_list[num1] == 0:
+#                 continue
+#             if puzzle_list[num] > puzzle_list[num1]:
+#                 #print puzzle_list[num], puzzle_list[num1]
+#                 count += 1
+#     return count
 
 
 def find_tile(puzzle,tile_num):
@@ -373,11 +378,10 @@ def main():
     #file_directory = 'sample.txt'
     global initial_puzzle
     initial_puzzle = read_puzzle(file_directory)
-
-    if permutation_inversion_check(initial_puzzle) % 2 == 1:
-        print "Your puzzle is unsolvable"
-
-        quit()
+    # solvability check
+    # if solvable_check(initial_puzzle) % 2 == find_empty(initial_puzzle)[0]%2:
+    #     print "Your puzzle is unsolvable"
+    #     quit()
 
     global goal_state
     global goal_state_list
@@ -391,5 +395,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-permutation_inversion_check(initial_puzzle)
