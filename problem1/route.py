@@ -86,8 +86,10 @@ Assumptions:
 	2. Intersection or cities wihtout coordinates, 0.0 is used for latitude and longitude.
 	3. If distance and speed is mentioned as 0, a constant 40 miles and 40 miles per hour is added respecitively.
 
-Longtour is implemented for uniform and astar based on greedy approach. For fringe, contrary to minheap implementation maxheap is used.
-Hence following a similar greedy approach at each node expansion.
+Longtour for uniform and astar is implemented based on greedy approach similar to dijkstra algorithm. For fringe, contrary to minheap implementation
+maxheap is used. Optimal solution is not possible using uniform search, since with addition of every node into the heap cost does always increase,
+thereby missing out many nodes for future expansion. Hence astar will give a close to optimal solution as we will see ahead using haversine distance
+to destination.
 '''
 import sys
 from heapq import heappush, heapify, heappop, _heapify_max
@@ -365,6 +367,7 @@ def printSolution(start_city, end_city, distance, time):
 					  ' '*4, speed, ' '*5,
 					  int(dist)/float(speed)*60, highway)
 		city = neighbour_city
+	print("-"*150)
 	print("\n")
 
 	# Machine Readable format
